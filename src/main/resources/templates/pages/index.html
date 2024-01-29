@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Triplanner</title>
+</head>
+
+<body>
+	<div class="pages-index-wrapper text-center" layout:fragment="contents">
+		<div class="container">
+			<div class="row p-form-top d-none d-lg-block d-xl-block d-xxl-block"></div>
+			<h1 class="text-dark">Triplanner</h1>
+			<h2 class="text-dark">旅行プランを立てよう</h2>
+			<div class="d-none d-lg-block d-xl-block d-xxl-block">
+				<form>
+					<div class="row justify-content-center">
+						<div class="col-3 mb-1">
+							<input type="email" class="form-control" id="loginId" placeholder="name@example.com">
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-3 mb-1">
+							<input type="password" class="form-control" id="loginPsassword" placeholder="Password">
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-3">
+							<a class="btn w-100 btn-outline-dark mb-3" href="/login">ログイン</a>
+						</div>
+					</div>
+				</form>
+				<div class="row justify-content-center">
+					<div class="col-3">
+						<a class="btn w-100 btn-outline-dark mb-3" href="/noLogin">ログインせずに使用</a>
+					</div>
+				</div>
+				<div class="row justify-content-center">
+					<div class="col-3">
+						<a class="btn w-100 btn-outline-dark" href="/users/new">アカウント作成</a>
+					</div>
+				</div>
+			</div>
+			<div class="d-block d-lg-none d-xl-none d-xxl-none">
+				<div class="form-block">
+					<input type="email" class="form-control mb-1" id="loginId" placeholder="name@example.com">
+					<input type="password" class="form-control mb-1" id="loginPsassword" placeholder="Password">
+					<a class="btn w-100 btn-outline-dark mb-3" href="/login">ログイン</a>
+					<a class="btn w-100 btn-outline-dark mb-6" href="/noLogin">ログインせずに使用</a>
+					<a class="btn w-100 btn-outline-dark" href="/users/new">アカウント作成</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</body>
+
+</html>
