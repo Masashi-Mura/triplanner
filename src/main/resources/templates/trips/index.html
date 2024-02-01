@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Triplanner</title>
+</head>
+
+<body>
+	<div class="topics-index-wrapper" layout:fragment="contents">
+		<div class="container mb-3">
+			<form class="gy-2 gx-3 align-items-center">
+				<div class="row justify-content-md-end mb-2">
+					<div class="col-auto">
+						<label class="visually-hidden" for="selectedDays">日数</label>
+						<select class="form-select" id="selectedDays">
+							<option selected>日数指定なし</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+					</div>
+					<div class="col-auto">
+						<div class="btn-group">
+							<button class="form-select" type="button" data-bs-toggle="dropdown"
+								data-bs-auto-close="outside" aria-expanded="false">
+								出発地を選択
+							</button>
+							<ul class="dropdown-menu overflow-auto" style="height: 200px">
+								<label class="dropdown-item"><input type="checkbox" name="departures" value="1">
+									1</label>
+								<label class="dropdown-item"><input type="checkbox" name="departures" value="2">
+									2</label>
+								<label class="dropdown-item"><input type="checkbox" name="departures" value="3">
+									3</label>
+								<label class="dropdown-item"><input type="checkbox" name="departures" value="4">
+									4</label>
+								<label class="dropdown-item"><input type="checkbox" name="departures" value="5">
+									5</label>
+							</ul>
+						</div>
+					</div>
+					<div class="col-auto">
+						<div class="btn-group">
+							<button class="form-select" type="button" data-bs-toggle="dropdown"
+								data-bs-auto-close="outside" aria-expanded="false">
+								経由地を選択
+							</button>
+							<ul class="dropdown-menu overflow-auto" style="height: 200px">
+								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="1">
+									1</label>
+								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="2">
+									2</label>
+								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="3">
+									3</label>
+								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="4">
+									4</label>
+								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="5">
+									5</label>
+							</ul>
+						</div>
+					</div>
+					<div class="col-auto">
+						<div class="btn-group">
+							<button class="form-select" type="button" data-bs-toggle="dropdown"
+								data-bs-auto-close="outside" aria-expanded="false">
+								タグ選択
+							</button>
+							<ul class="dropdown-menu overflow-auto" style="height: 200px">
+								<label class="dropdown-item"><input type="checkbox" name="tags" value="1">
+									1</label>
+								<label class="dropdown-item"><input type="checkbox" name="tags" value="2">
+									2</label>
+								<label class="dropdown-item"><input type="checkbox" name="tags" value="3">
+									3</label>
+								<label class="dropdown-item"><input type="checkbox" name="tags" value="4">
+									4</label>
+								<label class="dropdown-item"><input type="checkbox" name="tags" value="5">
+									5</label>
+							</ul>
+						</div>
+					</div>
+					<div class="btn-group col-auto" role="group" aria-label="Button group with nested dropdown">
+						<button type="button" class="btn btn-primary">検索</button>
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+								aria-expanded="false">
+							</button>
+							<ul class="dropdown-menu" style="">
+								<li><a class="dropdown-item" href="#">自分の投稿のみ表示</a></li>
+								<li><a class="dropdown-item" href="#">自分の削除した投稿のみ表示</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="container">
+			<div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4">
+				<div class="col">
+					<div class="card h-100">
+						<iframe class="card-img-top" width="600" height="400" style="border:0" loading="lazy"
+							allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+							th:src="@{|https://www.google.com/maps/embed/v1/place?key=${@environment.getProperty('googlemap.key')}&q=Space+Needle,Seattle+WA|}">
+						</iframe>
+						<div class="card-body">
+							<h5 class="card-title">Card title</h5>
+							<p class="card-text">This is a longer card with supporting text below as a natural lead-in
+								to
+								additional content. This content is a little bit longer.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card h-100">
+						<iframe class="card-img-top" width="600" height="400" style="border:0" loading="lazy"
+							allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+							th:src="'https://www.google.com/maps/embed/v1/directions?key=' + ${@environment.getProperty('googlemap.key')} + '&origin=東京駅&destination=大阪駅&waypoints=神奈川駅|名古屋駅'">
+						</iframe>
+						<div class="card-body">
+							<h5 class="card-title">Card title</h5>
+							<p class="card-text">This is a short card.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card h-100">
+						<img src="..." class="card-img-top" alt="...">
+						<div class="card-body">
+							<h5 class="card-title">Card title</h5>
+							<p class="card-text">This is a longer card with supporting text below as a natural lead-in
+								to
+								additional content.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="card h-100">
+						<img src="..." class="card-img-top" alt="...">
+						<div class="card-body">
+							<h5 class="card-title">Card title</h5>
+							<p class="card-text">This is a longer card with supporting text below as a natural lead-in
+								to
+								additional content. This content is a little bit longer.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				<li class="page-item disabled">
+					<a class="page-link">Previous</a>
+				</li>
+				<li class="page-item"><a class="page-link" href="#">1</a></li>
+				<li class="page-item"><a class="page-link" href="#">2</a></li>
+				<li class="page-item"><a class="page-link" href="#">3</a></li>
+				<li class="page-item">
+					<a class="page-link" href="#">Next</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</body>
+
+</html>
