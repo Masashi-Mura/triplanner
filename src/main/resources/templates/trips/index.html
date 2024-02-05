@@ -10,86 +10,73 @@
 	<div class="topics-index-wrapper" layout:fragment="contents">
 		<div class="container mb-3">
 			<form class="gy-2 gx-3 align-items-center">
-				<div class="row justify-content-md-end mb-2">
+				<div class="row justify-content-end align-items-end">
 					<div class="col-auto">
-						<label class="visually-hidden" for="selectedDays">日数</label>
-						<select class="form-select" id="selectedDays">
+						<label class="form-label" for="selectedDay">旅の日数</label>
+						<select class="form-select" id="selectedDay" name="selectedDay">
 							<option selected>日数指定なし</option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
+							<option value="1">1日</option>
+							<option value="2">2日</option>
+							<option value="3">3日</option>
+							<option value="4">4日</option>
+							<option value="5">5日以上</option>
 						</select>
 					</div>
+					<!-- 出発エリア選択 -->
 					<div class="col-auto">
-						<div class="btn-group">
-							<button class="form-select" type="button" data-bs-toggle="dropdown"
-								data-bs-auto-close="outside" aria-expanded="false">
-								出発地を選択
-							</button>
-							<ul class="dropdown-menu overflow-auto" style="height: 200px">
-								<label class="dropdown-item"><input type="checkbox" name="departures" value="1">
-									1</label>
-								<label class="dropdown-item"><input type="checkbox" name="departures" value="2">
-									2</label>
-								<label class="dropdown-item"><input type="checkbox" name="departures" value="3">
-									3</label>
-								<label class="dropdown-item"><input type="checkbox" name="departures" value="4">
-									4</label>
-								<label class="dropdown-item"><input type="checkbox" name="departures" value="5">
-									5</label>
-							</ul>
-						</div>
+						<label class="form-label" for="departurePrefecture">出発エリア</label>
+						<select class="form-select" id="departurePrefecture" name="departurePrefecture">
+							<option selected>全エリア</option>
+							<th:block th:each="prefecture : ${prefectures}">
+								<option name="departurePrefecture" th:value="${prefecture.id}"
+									th:text="${prefecture.name}" />
+							</th:block>
+						</select>
+					</div>
+					<!-- 経由エリア選択 -->
+					<div class="col-auto">
+						<label for="waypointsPrefecture" class="form-label">経由エリア</label>
+						<button id="waypointsPrefecture" class="form-select" type="button" data-bs-toggle="dropdown"
+							data-bs-auto-close="outside" aria-expanded="false">
+							経由エリアを選択
+						</button>
+						<ul class="dropdown-menu overflow-auto" style="height: 200px">
+							<th:block th:each="prefecture : ${prefectures}">
+								<label class="dropdown-item">
+									<input class="form-check-input" type="checkbox" name="waypoints" th:value="${prefecture.id}"
+										th:text="${prefecture.name}" />
+								</label>
+							</th:block>
+						</ul>
 					</div>
 					<div class="col-auto">
-						<div class="btn-group">
-							<button class="form-select" type="button" data-bs-toggle="dropdown"
-								data-bs-auto-close="outside" aria-expanded="false">
-								経由地を選択
-							</button>
-							<ul class="dropdown-menu overflow-auto" style="height: 200px">
-								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="1">
-									1</label>
-								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="2">
-									2</label>
-								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="3">
-									3</label>
-								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="4">
-									4</label>
-								<label class="dropdown-item"><input type="checkbox" name="waypoints" value="5">
-									5</label>
-							</ul>
-						</div>
+						<label for="tags" class="form-label">タグ</label>
+						<button id="tags" class="form-select" type="button" data-bs-toggle="dropdown"
+							data-bs-auto-close="outside" aria-expanded="false">
+							タグ選択
+						</button>
+						<ul class="dropdown-menu overflow-auto" style="height: 200px">
+							<th:block th:each="tag : ${tags}">
+								<label class="dropdown-item">
+									<input class="form-check-input" type="checkbox" name="tags" th:value="${tag.id}"
+										th:text="${tag.name}" />
+								</label>
+							</th:block>
+						</ul>
 					</div>
 					<div class="col-auto">
-						<div class="btn-group">
-							<button class="form-select" type="button" data-bs-toggle="dropdown"
-								data-bs-auto-close="outside" aria-expanded="false">
-								タグ選択
-							</button>
-							<ul class="dropdown-menu overflow-auto" style="height: 200px">
-								<label class="dropdown-item"><input type="checkbox" name="tags" value="1">
-									1</label>
-								<label class="dropdown-item"><input type="checkbox" name="tags" value="2">
-									2</label>
-								<label class="dropdown-item"><input type="checkbox" name="tags" value="3">
-									3</label>
-								<label class="dropdown-item"><input type="checkbox" name="tags" value="4">
-									4</label>
-								<label class="dropdown-item"><input type="checkbox" name="tags" value="5">
-									5</label>
-							</ul>
-						</div>
-					</div>
-					<div class="btn-group col-auto" role="group" aria-label="Button group with nested dropdown">
-						<button type="button" class="btn btn-primary">検索</button>
-						<div class="btn-group" role="group">
-							<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-								aria-expanded="false">
-							</button>
-							<ul class="dropdown-menu" style="">
-								<li><a class="dropdown-item" href="#">自分の投稿のみ表示</a></li>
-								<li><a class="dropdown-item" href="#">自分の削除した投稿のみ表示</a></li>
-							</ul>
+						<div id="searchButton" class="btn-group" role="group"
+							aria-label="Button group with nested dropdown">
+							<button type="button" class="btn btn-primary">検索</button>
+							<div class="btn-group" role="group">
+								<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+									aria-expanded="false">
+								</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="#">自分の投稿のみ表示</a></li>
+									<li><a class="dropdown-item" href="#">自分の削除した投稿のみ表示</a></li>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>
