@@ -1,2 +1,10 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/triplanner
+    username: ${psql.user}
+    password: ${psql.password}
 googlemap:
   key: ${googlemap.key}
