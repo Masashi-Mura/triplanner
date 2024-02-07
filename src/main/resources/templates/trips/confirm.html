@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Triplanner</title>
+</head>
+
+<body>
+	<div class="trips-itinerary-wrapper" layout:fragment="contents">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<h1>旅程作成</h1>
+				</div>
+			</div><!-- row閉じ -->
+			<div class="row">
+				<div class="col">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th scope="col">日程</th>
+								<th scope="col">行動</th>
+								<th scope="col">時刻</th><!-- 開始時刻 -->
+								<td> </td><!-- ～記載 -->
+								<td> </td><!-- ～終了時刻 -->
+								<th scope="col">内容</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1日</td>
+								<td>移動</td>
+								<td>9:10</td>
+								<td>～</td>
+								<td>9:45</td>
+								<td>東京駅→大阪駅<br>
+									東京駅集合</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>観光</td>
+								<td>9:45</td>
+								<td>～</td>
+								<td>12:50</td>
+								<td>
+									ショッピング<BR>
+									グランフロント大阪でショッピング、食事
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>移動</td>
+								<td>12:50</td>
+								<td>～</td>
+								<td>15:35</td>
+								<td>スカイツリー→大阪駅</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div><!-- row閉じ -->
+			<div class="row mb-2">
+				<div class="col-auto">
+					<label for="itineraryTitle" class="col-form-label">旅程タイトル</label>
+					<input type="text" id="itineraryTitle" class="form-control">
+				</div>
+			</div><!-- row閉じ -->
+			<div class="row mb-2">
+				<div class="col-auto">
+					<label for="publicOption" class="col-form-label">投稿設定</label>
+					<select type="text" id="publicOption" class="form-control">
+						<option value="1">一般公開しない</option>
+						<option value="2">一般公開する</option>
+						<option value="3">限定公開する</option>
+					</select>
+				</div>
+			</div><!-- row閉じ -->
+			<div class="row mb-4">
+				<label for="tags" class="col-form-label">タグ</label>
+				<div class="d-flex" id="tags">
+					<input type="checkbox" class="btn-check ml-2" id="btn-check-outlined" autocomplete="off">
+					<label class="btn btn-outline-primary" for="btn-check-outlined">一人旅</label><br>
+					<input type="checkbox" class="btn-check ml-2" id="btn-check2-outlined" autocomplete="off">
+					<label class="btn btn-outline-primary" for="btn-check2-outlined">カップル</label><br>
+					<input type="checkbox" class="btn-check ml-2" id="btn-check3-outlined" autocomplete="off">
+					<label class="btn btn-outline-primary" for="btn-check3-outlined">子連れ</label><br>
+				</div>
+			</div><!-- row閉じ -->
+			<div class="row mb-2">
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary">旅程を登録する</button>
+				</div>
+			</div><!-- row閉じ -->
+			<div class="row">
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary">戻る</button>
+				</div>
+			</div><!-- row閉じ -->
+
+		</div>
+	</div>
+</body>
+
+</html>

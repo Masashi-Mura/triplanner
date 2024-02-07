@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Triplanner</title>
+</head>
+
+<body>
+	<div class="trips-itinerary-wrapper" layout:fragment="contents">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<h1>旅程確認</h1>
+				</div>
+			</div> <!-- row閉じ -->
+			<div class="row">
+				<div class="col">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th scope="col">日程</th>
+								<th scope="col">行動</th>
+								<th scope="col">時刻</th> 
+								<td> </td> 
+								<td> </td> 
+								<th scope="col">内容</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1日</td>
+								<td>移動</td>
+								<td>9:10</td>
+								<td>～</td>
+								<td>9:45</td>
+								<td>東京駅→大阪駅<Br>
+									<textarea rows="1" cols="50" placeholder="内容"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>観光</td>
+								<td>9:45</td>
+								<td>～</td>
+								<td>12:50</td>
+								<td><input type="text" placeholder="タイトル"><BR>
+									<textarea rows="4" cols="50" placeholder="内容"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>移動</td>
+								<td>12:50</td>
+								<td>～</td>
+								<td>15:35</td>
+								<td>スカイツリー→大阪駅</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div> <!-- row閉じ -->
+			<div class="row mb-3">
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary">旅程確認画面へ進む</button>
+				</div>
+			</div><!-- row閉じ -->
+			<div class="row mb-3">
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary">戻る</button>
+				</div>
+			</div><!-- row閉じ -->
+		</div>
+	</div>
+</body>
+
+</html>

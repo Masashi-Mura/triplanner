@@ -27,7 +27,6 @@ public class TripsController {
 	private PrefectureRepository prefectureRepository;
 	
 	//旅一覧画面
-	//GetMappingの"/trips"は開発時の仮名称
 	@GetMapping("/trips")  
 	public String index(Model model) {
 		List<Tag> tags = tagRepository.findAllByOrderById();
@@ -43,12 +42,22 @@ public class TripsController {
 	}
 	
 	//旅作成画面
-	//GetMappingの"/trips"は開発時の仮名称
 	@GetMapping("/new")
 	public String newTrip(Model model) {
 		System.out.println("new");
 		return "trips/new";
 	}
 	
+	//旅程作成画面
+    @GetMapping("/itinerary")
+	public String newItinerary(Model model) {
+		return "trips/itinerary";
+	}
+    
+    //旅程確認登録画面
+    @GetMapping("/confirm")
+	public String newItineraryConfirm(Model model) {
+		return "trips/confirm";
+	}
 	
 }
