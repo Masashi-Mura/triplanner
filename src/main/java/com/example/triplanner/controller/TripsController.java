@@ -26,6 +26,7 @@ public class TripsController {
 	@Autowired
 	private PrefectureRepository prefectureRepository;
 	
+	//旅一覧画面
 	//GetMappingの"/trips"は開発時の仮名称
 	@GetMapping("/trips")  
 	public String index(Model model) {
@@ -38,9 +39,16 @@ public class TripsController {
 		List<Prefecture> prefectures = prefectureRepository.findAllByOrderById();
 		model.addAttribute("prefectures", prefectures);
 		
-		System.out.println("test");
-		
 		return "trips/index";
 	}
+	
+	//旅作成画面
+	//GetMappingの"/trips"は開発時の仮名称
+	@GetMapping("/new")
+	public String newTrip(Model model) {
+		System.out.println("new");
+		return "trips/new";
+	}
+	
 	
 }
