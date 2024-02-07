@@ -81,57 +81,79 @@ nav.navbar {
   .users-new-wrapper main {
     padding-top: 80px; }
 
-.topics-new-wrapper,
+.trips-new-wrapper {
+  padding-top: 40px;
+  height: 100vh; }
+  .trips-new-wrapper .container {
+    height: 100%; }
+  .trips-new-wrapper .row {
+    height: 100%; }
+  .trips-new-wrapper #map {
+    flex-basis: 0;
+    flex-grow: 4;
+    height: 100%;
+    max-height: 100vh; }
+  .trips-new-wrapper #directions-panel {
+    margin-top: 10px; }
+  .trips-new-wrapper .waypoint.form-control {
+    padding: 0.1rem 0.75rem;
+    margin: 0.1rem 0; }
+  .trips-new-wrapper .place-search.form-control {
+    padding: 0.1rem 0.75rem;
+    margin: 0.1rem 0; }
+  .trips-new-wrapper .scrollable {
+    max-height: 100%;
+    overflow-y: auto; }
+
 .comments-new-wrapper {
   padding-top: 80px; }
-  .topics-new-wrapper #description,
   .comments-new-wrapper #description {
     height: 80px; }
 
-.topics-index-wrapper {
+.trips-index-wrapper {
   padding: 80px 0 20px;
   background-color: #fafafa;
   min-height: calc(100vh - 180px);
   overflow: hidden; }
-  .topics-index-wrapper main {
+  .trips-index-wrapper main {
     background-color: #fff;
     padding: 20px 0;
     margin-top: 30px;
     border: 1px solid #e6ecf0;
     border-radius: 6px; }
-    .topics-index-wrapper main .author {
+    .trips-index-wrapper main .author {
       margin-top: 10px;
       padding: 0 20px; }
-    .topics-index-wrapper main .image {
+    .trips-index-wrapper main .image {
       margin: 10px 0;
       width: 100%; }
-    .topics-index-wrapper main .icons {
+    .trips-index-wrapper main .icons {
       display: flex;
       flex-direction: row; }
-      .topics-index-wrapper main .icons .icon {
+      .trips-index-wrapper main .icons .icon {
         display: block;
         width: 35px;
         height: 30px;
         margin-left: 20px; }
-        .topics-index-wrapper main .icons .icon img {
+        .trips-index-wrapper main .icons .icon img {
           width: 35px;
           height: 30px; }
-        .topics-index-wrapper main .icons .icon .favorite-on {
+        .trips-index-wrapper main .icons .icon .favorite-on {
           -webkit-filter: invert(40%) grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(400%) contrast(2);
           filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8); }
-      .topics-index-wrapper main .icons .count {
+      .trips-index-wrapper main .icons .count {
         display: flex;
         width: 10px;
         height: 30px;
         align-items: flex-end; }
-    .topics-index-wrapper main .description {
+    .trips-index-wrapper main .description {
       padding: 10px 20px;
       overflow: auto;
       white-space: pre-wrap;
       word-wrap: break-word;
       background-color: white;
       border: none; }
-    .topics-index-wrapper main .comments ul li {
+    .trips-index-wrapper main .comments ul li {
       list-style: none; }
 
 /*# sourceMappingURL=style.css.map */

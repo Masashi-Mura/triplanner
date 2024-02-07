@@ -8,3 +8,5 @@ spring:
     password: ${psql.password}
 googlemap:
   key: ${googlemap.key}
+hotpepper:
+  key: ${hotpepper.key}

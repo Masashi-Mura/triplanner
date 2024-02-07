@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Triplanner</title>
+</head>
+
+<body>
+	<div class="trips-new-wrapper text-center" layout:fragment="contents">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<div id="map"></div>
+				</div>
+				<div class="col-md-7  bg-body-tertiary scrollable">
+					<table border="1">
+						<tr>
+							<th>日程</th>
+							<th>到着時間</th>
+							<th>出発時間</th>
+							<th>滞在時間</th>
+							<th>ピン</th>
+							<th>場所</th>
+						</tr>
+						<tr>
+							<td>1日目</td>
+							<td>-</td>
+							<td><input type="time" value="08:00" class="inputed-time changeTime"></td>
+							<td>-</td>
+							<td class="pinName"></td>
+							<td><input type="text" name="placeName" placeholder="旅の出発地" value="東京駅"></td>
+						</tr>
+						<tbody id="sortableRow">
+							<tr>
+								<td class="days"></td>
+								<td class="arrival-times"></td>
+								<td class="depart-times"></td>
+								<td><input type="time" value="01:00" class="inputed-time changeTime"></td>
+								<td class="pinName"></td>
+								<td><input type="text" class="waypoint" name="placeName" placeholder="経由地" value="大阪駅">
+								</td>
+								<td><button class="handle btn btn-sm" type="button"><i class="bi bi-list"></i></button>
+								</td>
+								<td>&nbsp;&nbsp;<button class="deletePlaceNameField btn btn-sm" type="button"><i
+											class="bi bi-x-square"></i></button></td>
+							</tr>
+							<tr>
+								<td class="days"></td>
+								<td class="arrival-times"></td>
+								<td class="depart-times"></td>
+								<td><input type="time" value="01:00" class="inputed-time changeTime"></td>
+								<td class="pinName"></td>
+								<td><input type="text" class="waypoint" name="placeName" placeholder="経由地" value="名古屋駅">
+								</td>
+								<td><button class="handle btn btn-sm" type="button"><i class="bi bi-list"></i></button>
+								</td>
+								<td>&nbsp;&nbsp;<button class="deletePlaceNameField btn btn-sm" type="button"><i
+											class="bi bi-x-square"></i></button></td>
+							</tr>
+						</tbody>
+						<tr>
+							<td class="days"></td>
+							<td class="arrival-times"></td>
+							<td>-</td>
+							<td>-</td>
+							<td class="pinName"></td>
+							<td><input type="text" name="placeName" placeholder="旅の終わりの地点" value="博多駅"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td><button class="btn" type="button" id="addPlaceNameField"><i
+										class="bi bi-plus-circle-dotted"></i></button></td>
+						</tr>
+					</table>
+
+					<!--ルート検索ボタン-->
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" role="switch" id="permitHighways">
+						<label class="form-check-label" for="permitHighways">有料道路を通る</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" role="switch" id="optimizeWaypoints">
+						<label class="form-check-label" for="optimizeWaypoints">経由地を最適なルートに並び替え</label>
+					</div>
+					<div class="d-grid justify-content-md-end">
+						<button class="btn btn-outline-primary" type="button" id="routeSearch">ルート検索 <i
+								class="bi bi-search"></i></button>
+					</div>
+
+					<!--旅程作成ボタン-->
+					<div class="d-grid justify-content-md-end">
+						<button class="btn btn-outline-primary" type="submit">旅程作成に進む</button>
+					</div>
+
+					<!--場所検索ボタン-->
+					<br />
+					<b>場所を確認してから経由地に追加</b>
+					<br />
+					<input type="text" class="place-search form-control" id="searchPlaceName">
+					<div class="d-grid justify-content-md-end">
+						<button class="btn btn-outline-primary" type="button" id="submitPlaceName">場所を確認 <i
+								class="bi bi-search"></i></button>
+					</div>
+					<br>
+					<b>マップ中心付近の飲食店を検索</b>
+					<br />
+					<button class="btn btn-outline-primary" type="button" id="searchShop">お店を検索 <i
+							class="bi bi-search"></i></button>
+					<b>ショップ検索結果</b>
+					<div id="result"></div>
+					<!-- ホットペッパーグルメのクレジット表示 -->
+					<a href="http://webservice.recruit.co.jp/"><img
+							src="http://webservice.recruit.co.jp/banner/hotpepper-s.gif" alt="ホットペッパーグルメ Webサービス"
+							width="135" height="17" border="0" title="ホットペッパーグルメ Webサービス"></a>
+
+				</div>
+			</div>
+		</div><!-- ここまでclass=containerのタグ -->
+		<script
+			th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${@environment.getProperty('googlemap.key')} + '&callback=initMap&libraries=places&v=weekly'}"
+			defer></script>
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+			integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/sortablejs-make/Sortable.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
+
+		<script src="/js/tripTableHandle.js"></script>
+		<script src="/js/googleMapHandle.js"></script>
+	</div>
+
+</body>
+
+</html>
