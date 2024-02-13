@@ -15,67 +15,89 @@
 				</div>
 				<div class="col-md-7  bg-body-tertiary scrollable">
 					<table border="1">
-						<tr>
-							<th>日程</th>
-							<th>到着時間</th>
-							<th>出発時間</th>
-							<th>滞在時間</th>
-							<th>ピン</th>
-							<th>場所</th>
-						</tr>
-						<tr>
-							<td>1日目</td>
-							<td>-</td>
-							<td><input type="time" value="08:00" class="inputed-time changeTime"></td>
-							<td>-</td>
-							<td class="pinName"></td>
-							<td><input type="text" name="placeName" placeholder="旅の出発地" value="東京駅"></td>
-						</tr>
-						<tbody id="sortableRow">
+						<form id="nextPage" action="/trips/itinerary" method="post">
 							<tr>
-								<td class="days"></td>
-								<td class="arrival-times"></td>
-								<td class="depart-times"></td>
-								<td><input type="time" value="01:00" class="inputed-time changeTime"></td>
-								<td class="pinName"></td>
-								<td><input type="text" class="waypoint" name="placeName" placeholder="経由地" value="大阪駅">
-								</td>
-								<td><button class="handle btn btn-sm" type="button"><i class="bi bi-list"></i></button>
-								</td>
-								<td>&nbsp;&nbsp;<button class="deletePlaceNameField btn btn-sm" type="button"><i
-											class="bi bi-x-square"></i></button></td>
+								<th>日程</th>
+								<th>到着時間</th>
+								<th>出発時間</th>
+								<th>滞在時間</th>
+								<th>ピン</th>
+								<th>場所</th>
 							</tr>
 							<tr>
-								<td class="days"></td>
-								<td class="arrival-times"></td>
-								<td class="depart-times"></td>
-								<td><input type="time" value="01:00" class="inputed-time changeTime"></td>
+								<td>1日</td>
+								<td>-</td>
+								<td><input type="time" name="enteredDepartTimes" value="08:00"
+										class="entered-start-time changeTime"></td>
+									<input type="hidden" name="departTimes"><!-- hidden -->
+								<td>-</td>
 								<td class="pinName"></td>
-								<td><input type="text" class="waypoint" name="placeName" placeholder="経由地" value="名古屋駅">
-								</td>
-								<td><button class="handle btn btn-sm" type="button"><i class="bi bi-list"></i></button>
-								</td>
-								<td>&nbsp;&nbsp;<button class="deletePlaceNameField btn btn-sm" type="button"><i
-											class="bi bi-x-square"></i></button></td>
+								<td><input type="text" name="placeNames" class="placeName" placeholder="旅の出発地"
+										value="東京駅"></td>
 							</tr>
-						</tbody>
-						<tr>
-							<td class="days"></td>
-							<td class="arrival-times"></td>
-							<td>-</td>
-							<td>-</td>
-							<td class="pinName"></td>
-							<td><input type="text" name="placeName" placeholder="旅の終わりの地点" value="博多駅"></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td><button class="btn" type="button" id="addPlaceNameField"><i
-										class="bi bi-plus-circle-dotted"></i></button></td>
-						</tr>
+							<tbody id="sortableRow">
+								<tr>
+									<td class="days"></td>
+									<input type="hidden" name="days"><!-- hidden -->
+									<td class="arrival-times"></td>
+									<input type="hidden" name="arrivalTimes"><!-- hidden -->
+									<td class="depart-times"></td>
+									<input type="hidden" name="departTimes"><!-- hidden -->
+									<td><input type="time" value="01:00" name="stayTimes"
+											class="entered-stay-times changeTime">
+									</td>
+									<td class="pinName"></td>
+									<td><input type="text" name="placeNames" class="waypoint placeName"
+											placeholder="経由地" value="大阪駅">
+									</td>
+									<td><button class="handle btn btn-sm" type="button"><i
+												class="bi bi-list"></i></button>
+									</td>
+									<td><button class="deletePlaceNameField btn btn-sm" type="button"><i
+												class="bi bi-x-square"></i></button></td>
+								</tr>
+								<tr>
+									<td class="days"></td>
+									<input type="hidden" name="days"><!-- hidden -->
+									<td class="arrival-times"></td>
+									<input type="hidden" name="arrivalTimes"><!-- hidden -->
+									<td class="depart-times"></td>
+									<input type="hidden" name="departTimes"><!-- hidden -->
+									<td><input type="time" value="01:00" name="stayTimes"
+											class="entered-stay-times changeTime">
+									</td>
+									<td class="pinName"></td>
+									<td><input type="text" name="placeNames" class="waypoint placeName"
+											placeholder="経由地" value="名古屋駅">
+									</td>
+									<td><button class="handle btn btn-sm" type="button"><i
+												class="bi bi-list"></i></button>
+									</td>
+									<td><button class="deletePlaceNameField btn btn-sm" type="button"><i
+												class="bi bi-x-square"></i></button></td>
+								</tr>
+							</tbody>
+							<tr>
+								<td class="days"></td>
+								<input type="hidden" name="days"><!-- hidden -->
+								<td class="arrival-times"></td>
+								<input type="hidden" name="arrivalTimes"><!-- hidden -->
+								<td>-</td>
+								<td>-</td>
+								<td class="pinName"></td>
+								<td><input type="text" name="placeNames" class="placeName" placeholder="旅の終わりの地点"
+										value="博多駅"></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td><button class="btn" type="button" id="addPlaceNameField"><i
+											class="bi bi-plus-circle-dotted"></i></button></td>
+							</tr>
+						</form>
 					</table>
 
 					<!--ルート検索ボタン-->
@@ -94,7 +116,7 @@
 
 					<!--旅程作成ボタン-->
 					<div class="d-grid justify-content-md-end">
-						<button class="btn btn-outline-primary" type="submit">旅程作成に進む</button>
+						<button class="btn btn-outline-primary" type="submit" form="nextPage">旅程作成に進む</button>
 					</div>
 
 					<!--場所検索ボタン-->
@@ -128,9 +150,13 @@
 			integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 		<script src="https://unpkg.com/sortablejs-make/Sortable.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
+		<!-- dayjsインポート -->
+		<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+		<!--		<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/duration.js"></script>-->
 
 		<script src="/js/tripTableHandle.js"></script>
 		<script src="/js/googleMapHandle.js"></script>
+
 	</div>
 
 </body>
