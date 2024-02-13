@@ -2,7 +2,6 @@ let marker;
 let directionsRenderer;
 let infoWindow;
 let map;
-let placeNameFields;
 let waypts;
 let shopMarkers = [];
 let currentInfoWindow = null;
@@ -36,33 +35,6 @@ function initMap() {
 		searchShop(latlng);
 	});
 }
-
-
-// 経由地に追加ボタンの処理を定義する関数 
-function addPlaceName(keywordPlaceName) {
-
-	placeNameFields = [];//waypointPlaceNamesに書き換え検討
-	$(".waypoint").each(function() {
-		placeNameFields.push($(this).val());
-	});
-
-	if (placeNameFields.includes(keywordPlaceName)) {
-		let result = window.confirm("既に経由地に指定されています。\n追加しますか？");
-		if (! result) {
-			return;
-		}
-	}
-
-	let wayptsElements = document.querySelectorAll('.waypoint');
-	for (let i = 0; i < placeNameFields.length; i++) {
-		if (wayptsElements[i].value === "") {
-			wayptsElements[i].value = keywordPlaceName;
-			return;
-		}
-	}
-	window.alert("経由地がいっぱいです。\n経由地欄を追加してください。");
-}
-
 
 //マップ中心付近のショップを検索、結果をリストで表示
 function searchShop(latlng) {
@@ -234,7 +206,7 @@ function clear() {
 function calculateAndDisplayRoute(directionsService) {
 	clear();
 	directionsRenderer.setMap(map)
-	placeNameFields = [];
+//	placeNameFields = [];
 	waypts = [];
 
 	//空欄の経由地欄を削除
@@ -246,7 +218,7 @@ function calculateAndDisplayRoute(directionsService) {
 
 	//入力された全地名を取得
 	let enterdPlaceNames = [];
-	$("[name='placeName']").each(function() {
+	$(".placeName").each(function() {
 		enterdPlaceNames.push($(this).val());
 	});
 
@@ -287,10 +259,10 @@ function calculateAndDisplayRoute(directionsService) {
 				});
 				//滞在時間並び替え
 				let tmpTimeValue = [];
-				$("#sortableRow .inputed-time").each(function() {
+				$("#sortableRow .entered-stay-time").each(function() {
 					tmpTimeValue.push($(this).val());
 				});
-				$("#sortableRow .inputed-time").each(function(index) {
+				$("#sortableRow .entered-stay-time").each(function(index) {
 					$(this).val(tmpTimeValue[route.waypoint_order[index]]);
 				});
 			}
@@ -302,9 +274,9 @@ function calculateAndDisplayRoute(directionsService) {
 			});
 
 			//移動時間を表に反映
-			durationSecondsTimes = [];
+			durationSecondsValues = [];
 			route.legs.forEach((leg) => {
-				durationSecondsTimes.push(leg.duration.value);
+				durationSecondsValues.push(leg.duration.value);
 			});
 			changeTimes();
 
