@@ -72,14 +72,14 @@ function changeTimes() {
 	console.log('到着時間、出発時間の計算完了');//デバッグ用
 
 	// 結果を表に出力
-	let outputedDay = 1;
+	let outputedDay = "1";
 	$('.days').each(function(index) {
 		let currentDay = arrivalTimes[index].format('D');
-		if (outputedDay !== currentDay) {
+		if (outputedDay === currentDay) {
+			$(this).text("");
+		} else {
 			$(this).text(currentDay + "日目");
 			outputedDay = currentDay;
-		} else {
-			$(this).text("");
 		}
 	});
 	$('.arrival-times').each(function(index) {
@@ -94,7 +94,7 @@ function changeTimes() {
 		$(this).val(arrivalTimes[index].format('YYYY-MM-DDTHH:mm'));
 	});
 	$('input[name="departTimes"]').each(function(index) {
-			$(this).val(departTimes[index].format('YYYY-MM-DDTHH:mm'));
+		$(this).val(departTimes[index].format('YYYY-MM-DDTHH:mm'));
 	});
 };
 
@@ -122,7 +122,7 @@ function addPlaceNameField(placeName) {
 	if (typeof placeName === 'string') {
 		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="経由地" value="' + placeName + '"></td>';
 	} else {
-		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="経由地"></td>';
+		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="経由地" ></td>';
 	}
 	tableHtml += '<td><button class="handle btn btn-sm" type="button"><i class="bi bi-list"></i></button></td>';
 	tableHtml += '<td><button class="deletePlaceNameField btn btn-sm" type="button"><i class="bi bi-x-square"></i></button></td>';

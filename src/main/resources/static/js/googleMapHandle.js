@@ -206,7 +206,7 @@ function clear() {
 function calculateAndDisplayRoute(directionsService) {
 	clear();
 	directionsRenderer.setMap(map)
-//	placeNameFields = [];
+	//	placeNameFields = [];
 	waypts = [];
 
 	//空欄の経由地欄を削除
@@ -222,7 +222,7 @@ function calculateAndDisplayRoute(directionsService) {
 		enterdPlaceNames.push($(this).val());
 	});
 
-	//検索オプションの経由地を設定
+	//googleMapAPI検索オプションの経由地を設定
 	for (let i = 0; enterdPlaceNames.length - 2 > i; i++) {
 		waypts.push({
 			location: enterdPlaceNames[i + 1],
@@ -258,12 +258,12 @@ function calculateAndDisplayRoute(directionsService) {
 					$(this).val(waypts[route.waypoint_order[index]].location);
 				});
 				//滞在時間並び替え
-				let tmpTimeValue = [];
-				$("#sortableRow .entered-stay-time").each(function() {
-					tmpTimeValue.push($(this).val());
+				let tmpStayTimeValue = [];
+				$("#sortableRow .entered-stay-times").each(function() {
+					tmpStayTimeValue.push($(this).val());
 				});
-				$("#sortableRow .entered-stay-time").each(function(index) {
-					$(this).val(tmpTimeValue[route.waypoint_order[index]]);
+				$("#sortableRow .entered-stay-times").each(function(index) {
+					$(this).val(tmpStayTimeValue[route.waypoint_order[index]]);
 				});
 			}
 
