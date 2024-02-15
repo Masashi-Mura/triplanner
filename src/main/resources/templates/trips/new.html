@@ -14,8 +14,8 @@
 					<div id="map"></div>
 				</div>
 				<div class="col-md-7  bg-body-tertiary scrollable">
-					<table border="1">
-						<form id="nextPage" action="/trips/itinerary" method="post">
+					<form id="nextPage" action="/trips/itinerary" method="post" th:object="${tripsNewForm}">
+						<table border="1">
 							<tr>
 								<th>日程</th>
 								<th>到着時間</th>
@@ -25,57 +25,43 @@
 								<th>場所</th>
 							</tr>
 							<tr>
-								<td>1日</td>
+								<td>1日目</td>
 								<td>-</td>
-								<td><input type="time" name="enteredDepartTimes" value="08:00"
+								<td><input type="time" name="enteredDepartTimeValue" value="08:00"
+										th:value="${#temporals.format(#object.departTimes[0], 'HH:mm')}"
 										class="entered-start-time changeTime"></td>
-									<input type="hidden" name="departTimes"><!-- hidden -->
+								<input type="hidden" name="departTimes"><!-- hidden -->
 								<td>-</td>
 								<td class="pinName"></td>
 								<td><input type="text" name="placeNames" class="placeName" placeholder="旅の出発地"
-										value="東京駅"></td>
+										value="東京駅" th:value="${#object.placeNames[0]}"></td>
 							</tr>
 							<tbody id="sortableRow">
-								<tr>
-									<td class="days"></td>
-									<input type="hidden" name="days"><!-- hidden -->
-									<td class="arrival-times"></td>
-									<input type="hidden" name="arrivalTimes"><!-- hidden -->
-									<td class="depart-times"></td>
-									<input type="hidden" name="departTimes"><!-- hidden -->
-									<td><input type="time" value="01:00" name="stayTimes"
-											class="entered-stay-times changeTime">
-									</td>
-									<td class="pinName"></td>
-									<td><input type="text" name="placeNames" class="waypoint placeName"
-											placeholder="経由地" value="大阪駅">
-									</td>
-									<td><button class="handle btn btn-sm" type="button"><i
-												class="bi bi-list"></i></button>
-									</td>
-									<td><button class="deletePlaceNameField btn btn-sm" type="button"><i
-												class="bi bi-x-square"></i></button></td>
-								</tr>
-								<tr>
-									<td class="days"></td>
-									<input type="hidden" name="days"><!-- hidden -->
-									<td class="arrival-times"></td>
-									<input type="hidden" name="arrivalTimes"><!-- hidden -->
-									<td class="depart-times"></td>
-									<input type="hidden" name="departTimes"><!-- hidden -->
-									<td><input type="time" value="01:00" name="stayTimes"
-											class="entered-stay-times changeTime">
-									</td>
-									<td class="pinName"></td>
-									<td><input type="text" name="placeNames" class="waypoint placeName"
-											placeholder="経由地" value="名古屋駅">
-									</td>
-									<td><button class="handle btn btn-sm" type="button"><i
-												class="bi bi-list"></i></button>
-									</td>
-									<td><button class="deletePlaceNameField btn btn-sm" type="button"><i
-												class="bi bi-x-square"></i></button></td>
-								</tr>
+								<!-- ここからthymeleafで経由地作成 -->
+								<th:block th:each="i : ${#numbers.sequence(0, #object.placeNames.size() - 3)}">
+									<tr>
+										<td class="days"></td>
+										<input type="hidden" name="days"><!-- hidden -->
+										<td class="arrival-times"></td>
+										<input type="hidden" name="arrivalTimes"><!-- hidden -->
+										<td class="depart-times"></td>
+										<input type="hidden" name="departTimes"><!-- hidden -->
+										<td><input type="time" value="01:00"
+												th:value="${#temporals.format(#object.stayTimes[i], 'HH:mm' )}"
+												name="stayTimes" class="entered-stay-times changeTime">
+										</td>
+										<td class="pinName"></td>
+										<td><input type="text" name="placeNames" class="waypoint placeName"
+												placeholder="経由地" value="大阪駅" th:value="${#object.placeNames[i + 1]}">
+										</td>
+										<td><button class="handle btn btn-sm" type="button"><i
+													class="bi bi-list"></i></button>
+										</td>
+										<td><button class="deletePlaceNameField btn btn-sm" type="button"><i
+													class="bi bi-x-square"></i></button></td>
+									</tr>
+								</th:block>
+								<!-- ここまでthymeleafで経由地作成 -->
 							</tbody>
 							<tr>
 								<td class="days"></td>
@@ -86,7 +72,7 @@
 								<td>-</td>
 								<td class="pinName"></td>
 								<td><input type="text" name="placeNames" class="placeName" placeholder="旅の終わりの地点"
-										value="博多駅"></td>
+										th:value="${#object.placeNames[#object.placeNames.size() - 1]}"></td>
 							</tr>
 							<tr>
 								<td></td>
@@ -97,17 +83,22 @@
 								<td><button class="btn" type="button" id="addPlaceNameField"><i
 											class="bi bi-plus-circle-dotted"></i></button></td>
 							</tr>
-						</form>
-					</table>
+						</table>
+					</form>
 
 					<!--ルート検索ボタン-->
 					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" id="permitHighways">
+						<input class="form-check-input" type="checkbox" role="switch" id="permitHighways" checked>
 						<label class="form-check-label" for="permitHighways">有料道路を通る</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" role="switch" id="optimizeWaypoints">
 						<label class="form-check-label" for="optimizeWaypoints">経由地を最適なルートに並び替え</label>
+					</div>
+					<div th:if="${hasMessage}">
+						<div class="d-grid justify-content-md-end">
+							<span th:text="${message}" class="error-message"></span>
+						</div>
 					</div>
 					<div class="d-grid justify-content-md-end">
 						<button class="btn btn-outline-primary" type="button" id="routeSearch">ルート検索 <i
@@ -116,7 +107,7 @@
 
 					<!--旅程作成ボタン-->
 					<div class="d-grid justify-content-md-end">
-						<button class="btn btn-outline-primary" type="submit" form="nextPage">旅程作成に進む</button>
+						<button type="submit" class="btn btn-outline-primary" form="nextPage">旅程作成に進む</button>
 					</div>
 
 					<!--場所検索ボタン-->

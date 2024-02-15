@@ -1,32 +1,33 @@
 package com.example.triplanner.form;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Data;
-
 
 @Data
 public class ItineraryForm {
 
-//	private Integer id;
-	
-//	private Integer tripId;
-	
-	private Integer rowSequence;
+	//	private Integer id;
 
-	private Integer purposeId;
+	//	private Integer tripId;
+
+	private List<Integer> rowSequences;
+
+	private List<Integer> purposeIds;
+
+	private List<LocalDateTime> startTimes;
+
+	private List<LocalDateTime> endTimes;
+
+	private List<String> departureNames;
+
+	private List<Integer> departurePrefectureIds;
+
+	private List<String> arrivalNames;
+
+	private List<String> titles;
+
+	private List<String> descriptions;
 	
-	private Date startTime;
-	
-	private Date endTime;
-	
-	private String departureName;
-	
-	private Integer departurePrefectureId;
-	
-	private String arrivalName;
-	
-	private String title;
-	
-	private String description;
 }

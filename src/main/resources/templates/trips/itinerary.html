@@ -21,53 +21,81 @@
 							<tr>
 								<th scope="col">日程</th>
 								<th scope="col">行動</th>
-								<th scope="col">時刻</th> 
-								<td> </td> 
-								<td> </td> 
+								<th scope="col">時刻</th>
+								<td> </td>
+								<td> </td>
 								<th scope="col">内容</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>1日</td>
-								<td>移動</td>
-								<td>9:10</td>
-								<td>～</td>
-								<td>9:45</td>
-								<td>東京駅→大阪駅<Br>
-									<textarea rows="1" cols="50" placeholder="内容"></textarea>
-								</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>観光</td>
-								<td>9:45</td>
-								<td>～</td>
-								<td>12:50</td>
-								<td><input type="text" placeholder="タイトル"><BR>
-									<textarea rows="4" cols="50" placeholder="内容"></textarea>
-								</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td>移動</td>
-								<td>12:50</td>
-								<td>～</td>
-								<td>15:35</td>
-								<td>スカイツリー→大阪駅</td>
-							</tr>
-						</tbody>
+						<form id="submit" action="#" method="post">
+							<tbody th:object="${itineraryForm}"><!-- ここから繰り返し -->
+								<th:block th:each="i : ${#numbers.sequence(0, #object.rowSequences.size() - 1)}">
+									<!-- 偶数行(0スタート) -->
+									<th:block th:if="${#object.rowSequences[i] % 2 == 0}">
+										<tr>
+											<input type="hidden" name=rowSequences th:value="${#object.rowSequences[i]}">
+											<td th:text="${#temporals.format(#object.startTimes[i], 'dd')}"></td>
+											<td>移動</td>
+											<input type="hidden" name="purpose" th:value="移動"><!-- hidden -->
+											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">9:10</td>
+											<input type="hidden" name="startTimes"
+												th:value="${#object.startTimes[i]}"><!-- hidden -->
+											<td>～</td>
+											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
+											<input type="hidden" name="endTimes"
+												th:value="${#object.endTimes[i]}"><!-- hidden -->
+											<td> <span
+													th:text="${#object.departureNames[i]} + '&nbsp;&rArr;&nbsp;' + ${#object.arrivalNames[i]}"></span><br>
+												<textarea rows="1" cols="50" name="description"
+													placeholder="内容"></textarea>
+											</td>
+											<input type="hidden" name="departureNames"
+												th:value="${#object.departureNames[i]}"><!-- hidden -->
+											<input type="hidden" name="arrivalNames"
+												th:value="${#object.arrivalNames[i]}"><!-- hidden -->
+											<input type="hidden" name="title" value=""><!-- hidden -->
+										</tr>
+									</th:block>
+									<!-- 奇数行(0スタート) -->
+									<th:block th:if="${#object.rowSequences[i] % 2 != 0}">
+										<tr>
+											<input type="hidden" name=rowSequences th:value="${#object.rowSequences[i]}">
+											<td th:text="${#temporals.format(#object.startTimes[i], 'dd')}"></td>
+											<td>観光</td>
+											<input type="hidden" name="purpose" th:value="観光"><!-- hidden -->
+											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">9:10</td>
+											<input type="hidden" name="startTimes"
+												th:value="${#object.startTimes[i]}"><!-- hidden -->
+											<td>～</td>
+											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
+											<input type="hidden" name="endTimes"
+												th:value="${#object.endTimes[i]}"><!-- hidden -->
+
+											<td><input type="text" name="title" placeholder="タイトル"><BR>
+												<textarea rows="4" cols="50" name="description"
+													placeholder="内容"></textarea>
+											</td>
+											<input type="hidden" name="departureNames"
+												th:value="${#object.departureNames[i]}"><!-- hidden -->
+											<input type="hidden" name="arrivalNames"
+												th:value="${#object.arrivalNames[i]}"><!-- hidden -->
+										</tr>
+									</th:block> <!-- ここまで繰り返し -->
+								</th:block>
+							</tbody>
+						</form>
 					</table>
 				</div>
 			</div> <!-- row閉じ -->
 			<div class="row mb-3">
 				<div class="col-auto">
-					<button type="submit" class="btn btn-primary">旅程確認画面へ進む</button>
+					<button type="submit" class="btn btn-primary" form="submit"
+						formaction="/trips/confirm">旅程確認画面へ進む</button>
 				</div>
 			</div><!-- row閉じ -->
 			<div class="row mb-3">
 				<div class="col-auto">
-					<button type="submit" class="btn btn-primary">戻る</button>
+					<button type="submit" class="btn btn-primary" form="submit" formaction="/trips/new">戻る</button>
 				</div>
 			</div><!-- row閉じ -->
 		</div>
