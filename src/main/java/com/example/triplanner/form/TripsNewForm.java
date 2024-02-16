@@ -2,6 +2,7 @@ package com.example.triplanner.form;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -10,8 +11,8 @@ import lombok.Data;
 
 @Data
 public class TripsNewForm {
-	
-	private LocalTime enteredDepartTimeValue;//itineraryのValidationエラーで使用
+
+	private LocalTime enteredDepartTimeValue;//tripsNewの出発時間の値保存用
 
 	@Valid
 	private List<@NotNull LocalDateTime> arrivalTimes;
@@ -21,5 +22,12 @@ public class TripsNewForm {
 	private List<String> placeNames;
 
 	private List<LocalTime> stayTimes;
+
+	//以下、itineraryで取得
+	private String tripTitle;
+
+	private Integer publicId;
+
+	private List<Integer> tagIds = new ArrayList<>();
 
 }

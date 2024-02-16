@@ -84,6 +84,12 @@
 											class="bi bi-plus-circle-dotted"></i></button></td>
 							</tr>
 						</table>
+						<!-- 次ページでユーザが選択した値保持 -->
+						<input type="hidden" name="tripTitle" th:value="${#object.tripTitle}">
+						<th:block th:each="tagId : ${#object.tagIds}">
+							<input type="hidden" name="tagIds" th:value="${tagId}">
+						</th:block>
+						<input type="hidden" name="publicId" th:value="${#object.publicId}">"
 					</form>
 
 					<!--ルート検索ボタン-->

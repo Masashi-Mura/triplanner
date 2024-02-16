@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.triplanner.entity.Prefecture;
-import com.example.triplanner.entity.Region;
+import com.example.triplanner.entity.PublicOption;
+import com.example.triplanner.entity.Purpose;
 import com.example.triplanner.entity.Tag;
 import com.example.triplanner.form.ItineraryForm;
 import com.example.triplanner.form.TripsNewForm;
 import com.example.triplanner.repository.PrefectureRepository;
+import com.example.triplanner.repository.PublicOptionRepository;
+import com.example.triplanner.repository.PurposeRepository;
 import com.example.triplanner.repository.RegionRepository;
 import com.example.triplanner.repository.TagRepository;
 
@@ -38,14 +41,17 @@ public class TripsController {
 	@Autowired
 	private PrefectureRepository prefectureRepository;
 
+	@Autowired
+	private PublicOptionRepository publicOptionRepository;
+	
+	@Autowired
+	private PurposeRepository purposeRepository;
+
 	//旅一覧画面
 	@GetMapping("/index")
 	public String index(Model model) {
 		List<Tag> tags = tagRepository.findAllByOrderById();
 		model.addAttribute("tags", tags);
-
-		List<Region> regions = regionRepository.findAllByOrderById();
-		model.addAttribute("regions", regions);
 
 		List<Prefecture> prefectures = prefectureRepository.findAllByOrderById();
 		model.addAttribute("prefectures", prefectures);
@@ -83,7 +89,7 @@ public class TripsController {
 			BindingResult result, Model model) {
 		System.out.println("旅程作成画面コントローラ");
 		if (result.hasErrors()) {
-			//出発時刻をLocalDateからLocalDateTimeに変換
+			//出発時刻をLocalDateからLocalDateTimeに変換しmodelに追加
 			LocalDateTime enteredDepartTime = LocalDateTime.of(LocalDate.of(2020, 1, 1),
 					tripsNewForm.getEnteredDepartTimeValue());
 			tripsNewForm.setDepartTimes(List.of(enteredDepartTime));
@@ -94,7 +100,7 @@ public class TripsController {
 			return "trips/new";
 		}
 
-		// tripsNewFormをitineraryFormに変換
+		// tripsNewFormをitineraryFormに変換しmodelに追加
 		List<Integer> rowSequence = new ArrayList<>();
 		List<LocalDateTime> startTime = new ArrayList<>();
 		List<LocalDateTime> endTime = new ArrayList<>();
@@ -128,7 +134,18 @@ public class TripsController {
 		itineraryForm.setEndTimes(endTime);
 		itineraryForm.setDepartureNames(departureName);
 		itineraryForm.setArrivalNames(arrivalName);
+		itineraryForm.setTripTitle(tripsNewForm.getTripTitle());
+		itineraryForm.setPublicId(tripsNewForm.getPublicId());
+		itineraryForm.setTagIds(tripsNewForm.getTagIds());
 		model.addAttribute("itineraryForm", itineraryForm);
+
+		//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
+		List<Tag> tags = tagRepository.findAllByOrderById();
+		model.addAttribute("tags", tags);
+		List<PublicOption> publicOptions = publicOptionRepository.findAllByOrderById();
+		model.addAttribute("publicOptions", publicOptions);
+		List<Purpose> purposes = purposeRepository.findAllByOrderById();
+		model.addAttribute("purposes", purposes);
 
 		return "trips/itinerary";
 	}
@@ -162,8 +179,12 @@ public class TripsController {
 		}
 		tripsNewForm.setStayTimes(stayTimes);
 		tripsNewForm.setPlaceNames(placeNames);
+		tripsNewForm.setTripTitle(itineraryForm.getTripTitle());
+		tripsNewForm.setPublicId(itineraryForm.getPublicId());
+		tripsNewForm.setTagIds(itineraryForm.getTagIds());
 		System.out.println("旅程→旅作成戻る");
 		model.addAttribute("tripsNewForm", tripsNewForm);
+
 		return "trips/new";
 	}
 
