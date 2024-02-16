@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS regions_master CASCADE;
 DROP TABLE IF EXISTS prefectures_master CASCADE;
 DROP TABLE IF EXISTS purposes_master CASCADE;
-DROP TABLE IF EXISTS publics_master CASCADE;
+DROP TABLE IF EXISTS public_options_master CASCADE;
 DROP TABLE IF EXISTS tags_master CASCADE;
 DROP TABLE IF EXISTS trips CASCADE;
 DROP TABLE IF EXISTS tag_maps CASCADE;
@@ -108,13 +108,13 @@ CREATE TABLE IF NOT EXISTS purposes_master (
 
 -- 日本語文字化けのため英語のテスト用データを仮使用
 INSERT INTO purposes_master VALUES
-  (1,'idou',NOW(),NOW()),
-  (2,'kankou',NOW(),NOW()),
-  (3,'syokuji',NOW(),NOW()),
-  (4,'syukuhaku',NOW(),NOW()),
-  (5,'other',NOW(),NOW());
+  (1,'移動',NOW(),NOW()),
+  (2,'観光',NOW(),NOW()),
+  (3,'食事',NOW(),NOW()),
+  (4,'宿泊',NOW(),NOW()),
+  (5,'その他',NOW(),NOW());
 
-CREATE TABLE IF NOT EXISTS publics_master (
+CREATE TABLE IF NOT EXISTS public_options_master (
   id INTEGER CHECK(id > 0) NOT NULL,
   public_option VARCHAR(255) DEFAULT NULL,
   created_at TIMESTAMP NOT NULL,
@@ -123,10 +123,10 @@ CREATE TABLE IF NOT EXISTS publics_master (
 );
 
 -- 日本語文字化けのため英語のテスト用データを仮使用
-INSERT INTO publics_master VALUES
-  (1,'ippan_koukai',NOW(),NOW()),
-  (2,'no_koukai',NOW(),NOW()),
-  (3,'gentei_koukai',NOW(),NOW());
+INSERT INTO public_options_master VALUES
+  (1,'一般公開',NOW(),NOW()),
+  (2,'非公開',NOW(),NOW()),
+  (3,'限定公開',NOW(),NOW());
 
 CREATE TABLE IF NOT EXISTS tags_master (
   id INTEGER CHECK(id > 0) NOT NULL,
@@ -178,11 +178,12 @@ INSERT INTO users (authority, nickname, login_password, created_at, updated_at) 
 
 CREATE TABLE IF NOT EXISTS trips (
   id SERIAL NOT NULL,
+  user_id INTEGER NOT NULL,
+  trip_title VARCHAR(255) NOT NULL,
   total_trip_days INTEGER NOT NULL,
   public_id INTEGER NOT NULL,
   link VARCHAR(255),
   expiration TIMESTAMP,
-  user_id INTEGER NOT NULL,
   deleted BOOL NOT NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL,
@@ -192,11 +193,11 @@ CREATE TABLE IF NOT EXISTS trips (
 ALTER TABLE trips ADD CONSTRAINT FK_trip_user FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 -- tripテーブルテスト用データ
-INSERT INTO trips (total_trip_days, public_id, user_id, deleted, created_at, updated_at) VALUES
-  (1,1,1,false,NOW(),NOW()),
-  (2,2,1,false,NOW(),NOW()),
-  (3,1,2,false,NOW(),NOW()),
-  (4,2,2,false,NOW(),NOW());
+INSERT INTO trips (user_id, trip_title, total_trip_days, public_id, deleted, created_at, updated_at) VALUES
+  (1,'test1',1,1,false,NOW(),NOW()),
+  (1,'test2',2,2,false,NOW(),NOW()),
+  (2,'test3',1,2,false,NOW(),NOW()),
+  (2,'test4',2,2,false,NOW(),NOW());
 
 CREATE TABLE IF NOT EXISTS tag_maps (
   id SERIAL NOT NULL,

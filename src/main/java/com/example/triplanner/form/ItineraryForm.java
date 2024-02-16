@@ -11,6 +11,8 @@ public class ItineraryForm {
 	//	private Integer id;
 
 	//	private Integer tripId;
+	
+	//以下、itineraryテーブル
 
 	private List<Integer> rowSequences;
 
@@ -29,5 +31,12 @@ public class ItineraryForm {
 	private List<String> titles;
 
 	private List<String> descriptions;
+	
+	//以下、itineraryで取得
+	private String tripTitle;
+	
+	private Integer publicId;
+	
+	private List<Integer> tagIds;
 	
 }

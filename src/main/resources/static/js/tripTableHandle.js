@@ -28,6 +28,10 @@ function changeTimes() {
 		$('.depart-times').each(function() {
 			$(this).text("");
 		});
+		//次ページ遷移時のvalidation用データをリセット
+		$('input[name="arrivalTimes"]').each(function() {
+			$(this).val(null);
+		});
 		return;
 	}
 	console.log('durationSecondsValues', durationSecondsValues);//デバッグ用
