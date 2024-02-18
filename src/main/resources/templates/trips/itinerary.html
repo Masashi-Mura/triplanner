@@ -9,11 +9,7 @@
 <body>
 	<div class="trips-itinerary-wrapper" layout:fragment="contents">
 		<div class="container">
-			<div class="row">
-				<div class="col">
-					<h1>旅程作成</h1>
-				</div>
-			</div> <!-- row閉じ -->
+			<h1 class="text-center">旅程作成</h1>
 			<form id="submit" action="#" method="post" th:object="${itineraryForm}">
 				<div class="row">
 					<div class="col">
@@ -23,70 +19,84 @@
 									<th scope="col">日程</th>
 									<th scope="col">行動</th>
 									<th scope="col">時刻</th>
-									<td> </td>
-									<td> </td>
+									<td></td>
+									<td></td>
 									<th scope="col">内容</th>
 								</tr>
 							</thead>
 							<tbody><!-- ここから繰り返し -->
 								<th:block th:each="i : ${#numbers.sequence(0, #object.rowSequences.size() - 1)}">
-									<!-- 偶数行(0スタート) -->
+									<!-- 偶数行(行番号は0スタート) -->
 									<th:block th:if="${#object.rowSequences[i] % 2 == 0}">
 										<tr>
 											<input type="hidden" name=rowSequences
 												th:value="${#object.rowSequences[i]}">
-											<td th:text="${#temporals.format(#object.startTimes[i], 'dd')}"></td>
-											<td><select name="purposes" class="form-select">
+											<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
+											<td><select name="purposeIds" class="form-select">
 													<th:block th:each="purpose : ${purposes}">
-														<option th:value="${purpose.id}" th:text="${purpose.purpose}">
+														<option th:value="${purpose.id}" th:text="${purpose.purpose}"
+															th:selected="${purpose.id == #object.purposeIds[i]}">
 														</option>
 													</th:block>
 												</select></td>
-											<input type="hidden" name="purpose" th:value="移動"><!-- hidden -->
-											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">9:10</td>
+											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">00:00
+											</td>
 											<input type="hidden" name="startTimes"
 												th:value="${#object.startTimes[i]}"><!-- hidden -->
 											<td>～</td>
-											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
+											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">00:00</td>
 											<input type="hidden" name="endTimes"
 												th:value="${#object.endTimes[i]}"><!-- hidden -->
-											<td> <span
+											<td><span
 													th:text="${#object.departureNames[i]} + '&nbsp;&rArr;&nbsp;' + ${#object.arrivalNames[i]}"></span><br>
-												<textarea rows="1" cols="50" name="description"
-													placeholder="内容"></textarea>
+												<textarea rows="1" cols="50" name="descriptions" placeholder="内容"
+													th:text="${#object.descriptions[i]}"></textarea>
 											</td>
 											<input type="hidden" name="departureNames"
 												th:value="${#object.departureNames[i]}"><!-- hidden -->
 											<input type="hidden" name="arrivalNames"
 												th:value="${#object.arrivalNames[i]}"><!-- hidden -->
-											<input type="hidden" name="title" value=""><!-- hidden -->
+											<input type="hidden" name="titles"
+												th:value="${#object.titles[i]}"><!-- hidden -->
 										</tr>
 									</th:block>
-									<!-- 奇数行(0スタート) -->
+									<!-- 奇数行(行番号は0スタート) -->
 									<th:block th:if="${#object.rowSequences[i] % 2 != 0}">
 										<tr>
 											<input type="hidden" name=rowSequences
 												th:value="${#object.rowSequences[i]}">
-											<td th:text="${#temporals.format(#object.startTimes[i], 'dd')}"></td>
-											<td><select name="purposes" class="form-select" required>
-													<option value="" selected hidden>選択してください</option>
-													<th:block th:each="purpose : ${purposes}">
-														<option th:value="${purpose.id}" th:text="${purpose.purpose}">
-														</option>
+											<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
+											<td><select name="purposeIds" class="form-select" required>
+													<th:block th:if="${#object.purposeIds[1] == 0}">
+														<option value="" selected hidden>選択してください</option>
+														<th:block th:each="purpose : ${purposes}">
+															<option th:value="${purpose.id}"
+																th:text="${purpose.purpose}">
+															</option>
+														</th:block>
+													</th:block>
+													<th:block th:if="${#object.purposeIds[1] != 0}">
+														<th:block th:each="purpose : ${purposes}">
+															<option th:value="${purpose.id}"
+																th:text="${purpose.purpose}"
+																th:selected="${purpose.id == #object.purposeIds[i]}">
+															</option>
+														</th:block>
 													</th:block>
 												</select></td>
-											<input type="hidden" name="purpose" th:value="観光"><!-- hidden -->
-											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">9:10</td>
+											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">00:00
+											</td>
 											<input type="hidden" name="startTimes"
 												th:value="${#object.startTimes[i]}"><!-- hidden -->
 											<td>～</td>
-											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
+											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">00:00</td>
 											<input type="hidden" name="endTimes"
 												th:value="${#object.endTimes[i]}"><!-- hidden -->
 
-											<td><input type="text" name="title" placeholder="タイトル"><BR>
-												<textarea rows="4" cols="50" name="description"
-													placeholder="内容"></textarea>
+											<td><input type="text" name="titles" placeholder="タイトル"
+													th:value="${#object.titles[i]}"><BR>
+												<textarea rows="4" cols="50" name="descriptions" placeholder="内容"
+													th:text="${#object.descriptions[i]}"></textarea>
 											</td>
 											<input type="hidden" name="departureNames"
 												th:value="${#object.departureNames[i]}"><!-- hidden -->
@@ -108,10 +118,11 @@
 					<div class="col-md-4">
 						<th:block th:each="tag : ${tags}">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" th:id="${'tag' + tag.id}" name="tagIds"
-									th:value="${tag.id}" th:checked="${#lists.contains(#object.tagIds, tag.id)}">
 								<label class="form-check-label" th:for="${'tag' + tag.id}"
 									th:text="${tag.name}">tagname</label>
+								<input class="form-check-input" type="checkbox" th:id="${'tag' + tag.id}" name="tagIds"
+									th:value="${tag.id}"
+									th:checked="${#lists.contains(#object.tagIds, tag.id)}">
 							</div>
 						</th:block>
 					</div>

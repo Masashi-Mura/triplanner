@@ -34,7 +34,6 @@ function changeTimes() {
 		});
 		return;
 	}
-	console.log('durationSecondsValues', durationSecondsValues);//デバッグ用
 
 	// dayjsに時刻を加算した結果を保持するには、変数に代入が必要。
 	// 最初の出発時刻をdayjsで保存
@@ -211,9 +210,6 @@ $('#addPlaceNameField').on('click', addPlaceNameField);
 
 // 削除ボタンにイベントリスナーを設定
 $('.deletePlaceNameField').on('click', deletePlaceNameField);
-
-//// 送信ボタンにイベントリスナーを設定
-//$('#submit').on('click', postTableData);
 
 // 開発用出力 読み込み完了
 console.log('tripTableHandler.js読み込み完了');

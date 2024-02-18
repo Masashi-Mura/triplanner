@@ -43,7 +43,7 @@ public class TripsController {
 
 	@Autowired
 	private PublicOptionRepository publicOptionRepository;
-	
+
 	@Autowired
 	private PurposeRepository purposeRepository;
 
@@ -78,6 +78,8 @@ public class TripsController {
 		placeNames.add("平城宮跡歴史公園");
 		placeNames.add("トヨタレンタカー大阪駅前");
 		tripsNewForm.setPlaceNames(placeNames);
+		List<Integer> tagIds = new ArrayList<>();
+		tripsNewForm.setTagIds(tagIds);
 		model.addAttribute("tripsNewForm", tripsNewForm);
 
 		return "trips/new";
@@ -86,8 +88,9 @@ public class TripsController {
 	//旅程作成画面
 	@PostMapping("/itinerary")
 	public String newItinerary(@Validated TripsNewForm tripsNewForm,
-			BindingResult result, Model model) {
+			BindingResult result, ItineraryForm itineraryForm, Model model) {
 		System.out.println("旅程作成画面コントローラ");
+		// TripsNewFormのバリデーションエラー有
 		if (result.hasErrors()) {
 			//出発時刻をLocalDateからLocalDateTimeに変換しmodelに追加
 			LocalDateTime enteredDepartTime = LocalDateTime.of(LocalDate.of(2020, 1, 1),
@@ -97,48 +100,91 @@ public class TripsController {
 			//モデルにエラーの設定
 			model.addAttribute("hasMessage", true);
 			model.addAttribute("message", "ルート検索を行い時間を設定してください。");
+
 			return "trips/new";
+		}
+
+		// confirm画面から遷移。
+		if (itineraryForm.getFromConfirm() == true) {
+			//confirm画面のデータをmodelに追加
+			model.addAttribute("itineraryForm", itineraryForm);
+			//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
+			List<Tag> tags = tagRepository.findAllByOrderById();
+			model.addAttribute("tags", tags);
+			List<PublicOption> publicOptions = publicOptionRepository.findAllByOrderById();
+			model.addAttribute("publicOptions", publicOptions);
+			List<Purpose> purposes = purposeRepository.findAllByOrderById();
+			model.addAttribute("purposes", purposes);
+
+			return "trips/itinerary";
 		}
 
 		// tripsNewFormをitineraryFormに変換しmodelに追加
 		List<Integer> rowSequence = new ArrayList<>();
+		List<Integer> purposeIds = new ArrayList<>();
 		List<LocalDateTime> startTime = new ArrayList<>();
 		List<LocalDateTime> endTime = new ArrayList<>();
 		List<String> departureName = new ArrayList<>();
 		List<String> arrivalName = new ArrayList<>();
+		List<String> titles = new ArrayList<>();
+		List<String> descriptions = new ArrayList<>();
 		int arrivalTimesLnegth = tripsNewForm.getArrivalTimes().size();
 		for (int i = 0; i < arrivalTimesLnegth; i++) {
 			//偶数行
 			rowSequence.add(i * 2);
-			System.out.println("i=" + i + "の偶数行計算開始");
+			purposeIds.add(1);
 			startTime.add(tripsNewForm.getDepartTimes().get(i));
 			endTime.add(tripsNewForm.getArrivalTimes().get(i));
 			departureName.add(tripsNewForm.getPlaceNames().get(i));
 			arrivalName.add(tripsNewForm.getPlaceNames().get(i + 1));
-			System.out.println("i=" + i + "の偶数行計算終わり");
+//			titles.add(""); // 遷移1回目はnullが入る。
+//			descriptions.add(""); // 遷移1回目はnullが入る。
 			//奇数行
 			if (i == arrivalTimesLnegth - 1) {
 				break;
 			}
-			System.out.println("i=" + i + "の奇数行計算開始");
 			rowSequence.add(i * 2 + 1);
+			purposeIds.add(0);
 			startTime.add(tripsNewForm.getArrivalTimes().get(i));
 			endTime.add(tripsNewForm.getDepartTimes().get(i + 1));
 			departureName.add("");
 			arrivalName.add("");
-			System.out.println("i=" + i + "の奇数行計算終わり");
+//			titles.add("");
+//			descriptions.add("");
+			//
 		}
-		ItineraryForm itineraryForm = new ItineraryForm();
+		if (tripsNewForm.getTitles() == null) {
+			for (int i = 0; i < arrivalTimesLnegth * 2 + 1; i++) {
+				titles.add("");
+			}
+		}
+		if (tripsNewForm.getDescriptions() == null) {
+			for (int i = 0; i < arrivalTimesLnegth * 2 + 1; i++) {
+				descriptions.add("");
+			}
+		}
+		if (tripsNewForm.getDescriptions() == null) {
+			for (int i = 0; i < arrivalTimesLnegth * 2 + 1; i++) {
+				descriptions.add("");
+			}
+		}
 		itineraryForm.setRowSequences(rowSequence);
+		itineraryForm.setPurposeIds(purposeIds);
 		itineraryForm.setStartTimes(startTime);
 		itineraryForm.setEndTimes(endTime);
 		itineraryForm.setDepartureNames(departureName);
 		itineraryForm.setArrivalNames(arrivalName);
+		itineraryForm.setTitles(titles);
+		itineraryForm.setDescriptions(descriptions);
 		itineraryForm.setTripTitle(tripsNewForm.getTripTitle());
 		itineraryForm.setPublicId(tripsNewForm.getPublicId());
+		if (tripsNewForm.getTagIds() == null) {
+			tripsNewForm.setTagIds(new ArrayList<>());
+		} else {
+			tripsNewForm.setTagIds(tripsNewForm.getTagIds());
+		}
 		itineraryForm.setTagIds(tripsNewForm.getTagIds());
 		model.addAttribute("itineraryForm", itineraryForm);
-
 		//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
 		List<Tag> tags = tagRepository.findAllByOrderById();
 		model.addAttribute("tags", tags);
@@ -189,8 +235,32 @@ public class TripsController {
 	}
 
 	//旅程確認登録画面
-	@GetMapping("/confirm")
-	public String newItineraryConfirm(Model model) {
+	@PostMapping("/confirm")
+	public String newItineraryConfirm(ItineraryForm itineraryForm, Model model) {
+		//ユーザが選択したpurposeIdを文字に変換
+		List<Integer> selectedPurposeIds = itineraryForm.getPurposeIds();
+		List<String> purposeStrings = new ArrayList<>();
+		List<Purpose> purposes = purposeRepository.findAllByOrderById();
+		selectedPurposeIds.forEach(id -> {
+			purposeStrings.add(purposes.get(id - 1).getPurpose());
+		});
+		itineraryForm.setPurposeStrings(purposeStrings);
+
+		//ユーザが選択した投稿設定を文字に変換
+		int publicId = itineraryForm.getPublicId();
+		List<PublicOption> publicOptions = publicOptionRepository.findAllByOrderById();
+		itineraryForm.setPublicString(publicOptions.get(publicId - 1).getName());
+
+		//ユーザが選択したtagIdを文字に変換
+		List<Integer> selectedTagIds = itineraryForm.getTagIds();
+		List<String> tagStrings = new ArrayList<>();
+		List<Tag> tags = tagRepository.findAllByOrderById();
+		selectedTagIds.forEach(id -> {
+			tagStrings.add(tags.get(id - 1).getName());
+		});
+		itineraryForm.setTagStrings(tagStrings);
+
+		model.addAttribute("itineraryForm", itineraryForm);
 		return "trips/confirm";
 	}
 

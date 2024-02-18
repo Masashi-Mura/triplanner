@@ -47,8 +47,6 @@ function searchShop(latlng) {
 	fetch(apiUrl)  //controllerを経由してホットペッパーのAPI使用
 		.then(response => response.json())
 		.then(data => {
-			// jsonデータを表示
-			//document.getElementById('result').innerHTML = JSON.stringify(data, null, 2);
 
 			// マーカー初期化
 			for (let i = 0; i < shopMarkers.length; i++) {
@@ -206,7 +204,6 @@ function clear() {
 function calculateAndDisplayRoute(directionsService) {
 	clear();
 	directionsRenderer.setMap(map)
-	//	placeNameFields = [];
 	waypts = [];
 
 	//空欄の経由地欄を削除
@@ -226,7 +223,6 @@ function calculateAndDisplayRoute(directionsService) {
 	for (let i = 0; enterdPlaceNames.length - 2 > i; i++) {
 		waypts.push({
 			location: enterdPlaceNames[i + 1],
-			//location: { placeId: placeId },  placeIdで指定する場合の書き方
 			stopover: true, //経由地を停止地点とする
 		});
 	}
