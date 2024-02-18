@@ -16,7 +16,7 @@ public class ItineraryForm {
 
 	private List<Integer> rowSequences;
 
-	private List<Integer> purposeIds;
+	private List<Integer> purposeIds;//itineraryでユーザ入力
 
 	private List<LocalDateTime> startTimes;
 
@@ -24,19 +24,28 @@ public class ItineraryForm {
 
 	private List<String> departureNames;
 
-	private List<Integer> departurePrefectureIds;
+	private List<Integer> departurePrefectureIds;//APIで取得
 
 	private List<String> arrivalNames;
 
-	private List<String> titles;
+	private List<String> titles;//itineraryでユーザ入力
 
-	private List<String> descriptions;
+	private List<String> descriptions;//itineraryでユーザ入力
 	
-	//以下、itineraryで取得
-	private String tripTitle;
+	//以下、tripsテーブルで使用
+	private String tripTitle;//itineraryでユーザ入力
 	
-	private Integer publicId;
+	private Integer publicId;//itineraryでユーザ入力
 	
-	private List<Integer> tagIds;
+	private List<Integer> tagIds;//itineraryでユーザ入力
 	
+	//以下、確認画面出力用
+	private List<String> purposeStrings;
+	
+	private String publicString;
+	
+	private List<String> tagStrings;
+	
+	//以下、遷移判定用
+	private Boolean fromConfirm = false;
 }

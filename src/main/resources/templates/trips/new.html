@@ -9,6 +9,7 @@
 <body>
 	<div class="trips-new-wrapper text-center" layout:fragment="contents">
 		<div class="container">
+			<h1>旅作成</h1>
 			<div class="row">
 				<div class="col-md-5">
 					<div id="map"></div>
@@ -80,8 +81,8 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td><button class="btn" type="button" id="addPlaceNameField"><i
-											class="bi bi-plus-circle-dotted"></i></button></td>
+								<td><button class="btn" type="button" id="addPlaceNameField">
+										<i class="bi bi-plus-circle-dotted"></i></button></td>
 							</tr>
 						</table>
 						<!-- 次ページでユーザが選択した値保持 -->
@@ -89,7 +90,7 @@
 						<th:block th:each="tagId : ${#object.tagIds}">
 							<input type="hidden" name="tagIds" th:value="${tagId}">
 						</th:block>
-						<input type="hidden" name="publicId" th:value="${#object.publicId}">"
+						<input type="hidden" name="publicId" th:value="${#object.publicId}">
 					</form>
 
 					<!--ルート検索ボタン-->
