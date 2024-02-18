@@ -36,6 +36,8 @@
 								<td class="pinName"></td>
 								<td><input type="text" name="placeNames" class="placeName" placeholder="旅の出発地"
 										value="東京駅" th:value="${#object.placeNames[0]}"></td>
+								<input type="hidden" name="latitudes"><!-- hidden -->
+								<input type="hidden" name="longitudes"><!-- hidden -->
 							</tr>
 							<tbody id="sortableRow">
 								<!-- ここからthymeleafで経由地作成 -->
@@ -55,11 +57,13 @@
 										<td><input type="text" name="placeNames" class="waypoint placeName"
 												placeholder="経由地" value="大阪駅" th:value="${#object.placeNames[i + 1]}">
 										</td>
-										<td><button class="handle btn btn-sm" type="button"><i
-													class="bi bi-list"></i></button>
+										<input type="hidden" name="latitudes"><!-- hidden -->
+										<input type="hidden" name="longitudes"><!-- hidden -->
+										<td><button class="handle btn btn-sm" type="button">
+												<i class="bi bi-list"></i></button>
 										</td>
-										<td><button class="deletePlaceNameField btn btn-sm" type="button"><i
-													class="bi bi-x-square"></i></button></td>
+										<td><button class="deletePlaceNameField btn btn-sm" type="button">
+												<i class="bi bi-x-square"></i></button></td>
 									</tr>
 								</th:block>
 								<!-- ここまでthymeleafで経由地作成 -->
@@ -108,8 +112,8 @@
 						</div>
 					</div>
 					<div class="d-grid justify-content-md-end">
-						<button class="btn btn-outline-primary" type="button" id="routeSearch">ルート検索 <i
-								class="bi bi-search"></i></button>
+						<button class="btn btn-outline-primary" type="button" id="routeSearch">ルート検索
+							<i class="bi bi-search"></i></button>
 					</div>
 
 					<!--旅程作成ボタン-->
@@ -123,19 +127,19 @@
 					<br />
 					<input type="text" class="place-search form-control" id="searchPlaceName">
 					<div class="d-grid justify-content-md-end">
-						<button class="btn btn-outline-primary" type="button" id="submitPlaceName">場所を確認 <i
-								class="bi bi-search"></i></button>
+						<button class="btn btn-outline-primary" type="button" id="submitPlaceName">場所を確認
+							<i class="bi bi-search"></i></button>
 					</div>
 					<br>
 					<b>マップ中心付近の飲食店を検索</b>
 					<br />
-					<button class="btn btn-outline-primary" type="button" id="searchShop">お店を検索 <i
-							class="bi bi-search"></i></button>
+					<button class="btn btn-outline-primary" type="button" id="searchShop">お店を検索
+						<i class="bi bi-search"></i></button>
 					<b>ショップ検索結果</b>
 					<div id="result"></div>
 					<!-- ホットペッパーグルメのクレジット表示 -->
-					<a href="http://webservice.recruit.co.jp/"><img
-							src="http://webservice.recruit.co.jp/banner/hotpepper-s.gif" alt="ホットペッパーグルメ Webサービス"
+					<a href="http://webservice.recruit.co.jp/">
+						<img src="http://webservice.recruit.co.jp/banner/hotpepper-s.gif" alt="ホットペッパーグルメ Webサービス"
 							width="135" height="17" border="0" title="ホットペッパーグルメ Webサービス"></a>
 
 				</div>
@@ -150,7 +154,6 @@
 		<script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
 		<!-- dayjsインポート -->
 		<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
-		<!--		<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/duration.js"></script>-->
 
 		<script src="/js/tripTableHandle.js"></script>
 		<script src="/js/googleMapHandle.js"></script>

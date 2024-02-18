@@ -13,6 +13,7 @@
 			<form id="submit" action="#" method="post" th:object="${itineraryForm}">
 				<div class="row">
 					<div class="col">
+<!--						<p th:if="${#fields.hasErrors('purposeIds')}" th:errors="*{purposeIds}" th:errorclass="error-msg"></p>-->
 						<table class="table table-striped">
 							<thead>
 								<tr>
@@ -47,6 +48,8 @@
 											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">00:00</td>
 											<input type="hidden" name="endTimes"
 												th:value="${#object.endTimes[i]}"><!-- hidden -->
+											<input type="hidden" name="departurePrefectureIds"
+												th:value="${#object.departurePrefectureIds[i]}"><!-- hidden -->
 											<td><span
 													th:text="${#object.departureNames[i]} + '&nbsp;&rArr;&nbsp;' + ${#object.arrivalNames[i]}"></span><br>
 												<textarea rows="1" cols="50" name="descriptions" placeholder="内容"
@@ -98,6 +101,8 @@
 												<textarea rows="4" cols="50" name="descriptions" placeholder="内容"
 													th:text="${#object.descriptions[i]}"></textarea>
 											</td>
+											<input type="hidden" name="departurePrefectureIds"
+												th:value="${#object.departurePrefectureIds[i]}"><!-- hidden -->
 											<input type="hidden" name="departureNames"
 												th:value="${#object.departureNames[i]}"><!-- hidden -->
 											<input type="hidden" name="arrivalNames"
@@ -110,19 +115,20 @@
 					</div>
 				</div> <!-- row閉じ ここまで旅程表-->
 				<label for="tripTitle" class="form-label">旅のタイトル</label><br>
+<!--				<p th:if="${#fields.hasErrors('tripTitle')}" th:errors="*{tripTitle}" th:errorclass="error-msg"></p>-->
 				<input type="text" id="tripTitle" class="mb-3" name="tripTitle" placeholder="旅のタイトル"
 					th:value="${#object.tripTitle}"><br>
 				<!-- タグをDBから取得して表示する-->
 				<div class="row mb-3">
 					<label class="form-label">タグ</label>
+<!--					<p th:if="${#fields.hasErrors('tagIds')}" th:errors="*{tagIds}" th:errorclass="error-msg"></p>-->
 					<div class="col-md-4">
 						<th:block th:each="tag : ${tags}">
 							<div class="form-check form-check-inline">
 								<label class="form-check-label" th:for="${'tag' + tag.id}"
 									th:text="${tag.name}">tagname</label>
 								<input class="form-check-input" type="checkbox" th:id="${'tag' + tag.id}" name="tagIds"
-									th:value="${tag.id}"
-									th:checked="${#lists.contains(#object.tagIds, tag.id)}">
+									th:value="${tag.id}" th:checked="${#lists.contains(#object.tagIds, tag.id)}">
 							</div>
 						</th:block>
 					</div>

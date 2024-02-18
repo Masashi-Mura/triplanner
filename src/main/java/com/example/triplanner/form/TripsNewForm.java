@@ -19,6 +19,10 @@ public class TripsNewForm {
 	private List<LocalDateTime> departTimes;
 
 	private List<String> placeNames;
+	
+	private List<Double> latitudes;
+	
+	private List<Double> longitudes;
 
 	private List<LocalTime> stayTimes;
 
@@ -33,8 +37,6 @@ public class TripsNewForm {
 
 	private List<Integer> tagIds;
 	
-	private List<Double> latitudes;
-	
-	private List<Double> longitudes;
+
 	
 }

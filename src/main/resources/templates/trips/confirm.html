@@ -94,6 +94,8 @@
 				<input type="hidden" th:each="startTime : ${#object.startTimes}" name="startTimes"
 					th:value="${startTime}">
 				<input type="hidden" th:each="endTime : ${#object.endTimes}" name="endTimes" th:value="${endTime}">
+				<input type="hidden" th:each="departurePrefectureId : ${#object.departurePrefectureIds}"
+					name="departurePrefectureIds" th:value="${departurePrefectureId}">
 				<input type="hidden" th:each="departureName : ${#object.departureNames}" name="departureNames"
 					th:value="${departureName}">
 				<input type="hidden" th:each="arrivalName : ${#object.arrivalNames}" name="arrivalNames"
