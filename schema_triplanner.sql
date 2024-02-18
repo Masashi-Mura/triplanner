@@ -29,10 +29,7 @@ CREATE TABLE IF NOT EXISTS prefectures_master (
 
 ALTER TABLE prefectures_master ADD CONSTRAINT FK_prefectures_region FOREIGN KEY (region_id) REFERENCES regions_master (id);
 
--- 日本語文字化けのため英語のテスト用データを仮使用
 INSERT INTO regions_master VALUES
-  -- (1,'hokkaido_region',NOW(),NOW()),
-  -- (2,'touhoku_region',NOW(),NOW());
   (1,'北海道地方',NOW(),NOW()),
   (2,'東北地方',NOW(),NOW()),
   (3,'関東地方',NOW(),NOW()),
@@ -42,13 +39,7 @@ INSERT INTO regions_master VALUES
   (7,'四国地方',NOW(),NOW()),
   (8,'九州地方',NOW(),NOW());
 
--- 日本語文字化けのため英語のテスト用データを仮使用
 INSERT INTO prefectures_master VALUES
-  -- (1,1,'hokkaido',NOW(),NOW()),
-  -- (2,2,'aomoriken',NOW(),NOW()),
-  -- (3,2,'iwateken',NOW(),NOW()),
-  -- (4,2,'miyagiken',NOW(),NOW()),
-  -- (5,2,'akitaken',NOW(),NOW());
   (1,1,'北海道',NOW(),NOW()),
   (2,2,'青森県',NOW(),NOW()),
   (3,2,'岩手県',NOW(),NOW()),
@@ -106,7 +97,6 @@ CREATE TABLE IF NOT EXISTS purposes_master (
   PRIMARY KEY (id)
 );
 
--- 日本語文字化けのため英語のテスト用データを仮使用
 INSERT INTO purposes_master VALUES
   (1,'移動',NOW(),NOW()),
   (2,'観光',NOW(),NOW()),
@@ -122,7 +112,6 @@ CREATE TABLE IF NOT EXISTS public_options_master (
   PRIMARY KEY (id)
 );
 
--- 日本語文字化けのため英語のテスト用データを仮使用
 INSERT INTO public_options_master VALUES
   (1,'一般公開',NOW(),NOW()),
   (2,'非公開',NOW(),NOW()),
@@ -136,12 +125,7 @@ CREATE TABLE IF NOT EXISTS tags_master (
   PRIMARY KEY (id)
 );
 
--- 日本語文字化けのため英語のテスト用データを仮使用
 INSERT INTO tags_master VALUES
-  -- (1,'hitoritabi',NOW(),NOW()),
-  -- (2,'couple',NOW(),NOW()),
-  -- (3,'kodure',NOW(),NOW()),
-  -- (4,'friends',NOW(),NOW());
   (1,'一人旅',NOW(),NOW()),
   (2,'カップル',NOW(),NOW()),
   (3,'子連れ',NOW(),NOW()),
@@ -283,7 +267,7 @@ CREATE TABLE IF NOT EXISTS favorites (
 ALTER TABLE favorites ADD CONSTRAINT FK_favorite_users FOREIGN KEY (user_id) REFERENCES users (user_id);
 ALTER TABLE favorites ADD CONSTRAINT FK_favorite_trip FOREIGN KEY (trip_id) REFERENCES trips (id);
 
--- favorite favorites
+-- favorite テスト用データ
 INSERT INTO favorites (user_id, trip_id, created_at, updated_at) VALUES
   (1,1,NOW(),NOW()),
   (1,2,NOW(),NOW()),

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.triplanner.component.ReverceGeocoder;
 import com.example.triplanner.entity.Prefecture;
 import com.example.triplanner.entity.PublicOption;
 import com.example.triplanner.entity.Purpose;
@@ -46,6 +47,9 @@ public class TripsController {
 
 	@Autowired
 	private PurposeRepository purposeRepository;
+
+	@Autowired
+	private ReverceGeocoder reverceGeocoder;
 
 	//旅一覧画面
 	@GetMapping("/index")
@@ -124,6 +128,7 @@ public class TripsController {
 		List<Integer> purposeIds = new ArrayList<>();
 		List<LocalDateTime> startTime = new ArrayList<>();
 		List<LocalDateTime> endTime = new ArrayList<>();
+		List<Integer> departurePrefectureIds = new ArrayList<>();
 		List<String> departureName = new ArrayList<>();
 		List<String> arrivalName = new ArrayList<>();
 		List<String> titles = new ArrayList<>();
@@ -135,10 +140,10 @@ public class TripsController {
 			purposeIds.add(1);
 			startTime.add(tripsNewForm.getDepartTimes().get(i));
 			endTime.add(tripsNewForm.getArrivalTimes().get(i));
+			departurePrefectureIds.add(reverceGeocoder.getPrefectureId(
+					tripsNewForm.getLatitudes().get(i), tripsNewForm.getLongitudes().get(i)));
 			departureName.add(tripsNewForm.getPlaceNames().get(i));
 			arrivalName.add(tripsNewForm.getPlaceNames().get(i + 1));
-//			titles.add(""); // 遷移1回目はnullが入る。
-//			descriptions.add(""); // 遷移1回目はnullが入る。
 			//奇数行
 			if (i == arrivalTimesLnegth - 1) {
 				break;
@@ -147,31 +152,27 @@ public class TripsController {
 			purposeIds.add(0);
 			startTime.add(tripsNewForm.getArrivalTimes().get(i));
 			endTime.add(tripsNewForm.getDepartTimes().get(i + 1));
+			departurePrefectureIds.add(null);
 			departureName.add("");
 			arrivalName.add("");
-//			titles.add("");
-//			descriptions.add("");
-			//
 		}
+
 		if (tripsNewForm.getTitles() == null) {
-			for (int i = 0; i < arrivalTimesLnegth * 2 + 1; i++) {
+			for (int i = 0; i < rowSequence.size(); i++) {
 				titles.add("");
 			}
 		}
 		if (tripsNewForm.getDescriptions() == null) {
-			for (int i = 0; i < arrivalTimesLnegth * 2 + 1; i++) {
+			for (int i = 0; i < rowSequence.size(); i++) {
 				descriptions.add("");
 			}
 		}
-		if (tripsNewForm.getDescriptions() == null) {
-			for (int i = 0; i < arrivalTimesLnegth * 2 + 1; i++) {
-				descriptions.add("");
-			}
-		}
+
 		itineraryForm.setRowSequences(rowSequence);
 		itineraryForm.setPurposeIds(purposeIds);
 		itineraryForm.setStartTimes(startTime);
 		itineraryForm.setEndTimes(endTime);
+		itineraryForm.setDeparturePrefectureIds(departurePrefectureIds);
 		itineraryForm.setDepartureNames(departureName);
 		itineraryForm.setArrivalNames(arrivalName);
 		itineraryForm.setTitles(titles);
@@ -185,6 +186,7 @@ public class TripsController {
 		}
 		itineraryForm.setTagIds(tripsNewForm.getTagIds());
 		model.addAttribute("itineraryForm", itineraryForm);
+
 		//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
 		List<Tag> tags = tagRepository.findAllByOrderById();
 		model.addAttribute("tags", tags);
@@ -236,7 +238,21 @@ public class TripsController {
 
 	//旅程確認登録画面
 	@PostMapping("/confirm")
-	public String newItineraryConfirm(ItineraryForm itineraryForm, Model model) {
+	public String newItineraryConfirm(@Validated ItineraryForm itineraryForm, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("itineraryForm", itineraryForm);
+
+			//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
+			List<Tag> tags = tagRepository.findAllByOrderById();
+			model.addAttribute("tags", tags);
+			List<PublicOption> publicOptions = publicOptionRepository.findAllByOrderById();
+			model.addAttribute("publicOptions", publicOptions);
+			List<Purpose> purposes = purposeRepository.findAllByOrderById();
+			model.addAttribute("purposes", purposes);
+
+			return "trips/itinerary";
+		}
+
 		//ユーザが選択したpurposeIdを文字に変換
 		List<Integer> selectedPurposeIds = itineraryForm.getPurposeIds();
 		List<String> purposeStrings = new ArrayList<>();

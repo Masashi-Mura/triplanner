@@ -276,6 +276,21 @@ function calculateAndDisplayRoute(directionsService) {
 			});
 			changeTimes();
 
+			//場所の緯度経度を（type="hidden"）に出力
+			//			let latitudesLength = $('input[name="latitudes"]').length;
+			//latitudeを出力
+			$('input[name="latitudes"]').each(function(index) {
+				//				if (index !== latitudesLength - 1) {
+				$(this).val(route.legs[index].start_location.lat());
+				//				};
+			});
+			//longitudeを出力
+			$('input[name="longitudes"]').each(function(index) {
+				//				if (index !== latitudesLength - 1) {
+				$(this).val(route.legs[index].start_location.lng());
+				//				};
+			});
+
 		})
 		.catch((e) => window.alert("Directions request failed due to " + e));
 }

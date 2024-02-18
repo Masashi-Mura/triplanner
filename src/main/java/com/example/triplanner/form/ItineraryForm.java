@@ -8,14 +8,9 @@ import lombok.Data;
 @Data
 public class ItineraryForm {
 
-	//	private Integer id;
-
-	//	private Integer tripId;
-	
-	//以下、itineraryテーブル
-
 	private List<Integer> rowSequences;
 
+//	@Size(min=1, message = "行動のプルダウンを全て選択してください")
 	private List<Integer> purposeIds;//itineraryでユーザ入力
 
 	private List<LocalDateTime> startTimes;
@@ -33,10 +28,13 @@ public class ItineraryForm {
 	private List<String> descriptions;//itineraryでユーザ入力
 	
 	//以下、tripsテーブルで使用
+//	@NotEmpty(message = "旅程のタイトルを入力してください")
 	private String tripTitle;//itineraryでユーザ入力
 	
+//	@NotNull
 	private Integer publicId;//itineraryでユーザ入力
 	
+//	@NotNull(message = "タグを１つ以上選択してください")
 	private List<Integer> tagIds;//itineraryでユーザ入力
 	
 	//以下、確認画面出力用
