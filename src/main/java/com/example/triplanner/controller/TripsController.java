@@ -26,7 +26,6 @@ import com.example.triplanner.form.TripsNewForm;
 import com.example.triplanner.repository.PrefectureRepository;
 import com.example.triplanner.repository.PublicOptionRepository;
 import com.example.triplanner.repository.PurposeRepository;
-import com.example.triplanner.repository.RegionRepository;
 import com.example.triplanner.repository.TagRepository;
 
 @Controller
@@ -35,9 +34,6 @@ public class TripsController {
 
 	@Autowired
 	private TagRepository tagRepository;
-
-	@Autowired
-	private RegionRepository regionRepository;
 
 	@Autowired
 	private PrefectureRepository prefectureRepository;
@@ -137,9 +133,12 @@ public class TripsController {
 		List<String> arrivalName = new ArrayList<>();
 		List<String> titles = new ArrayList<>();
 		List<String> descriptions = new ArrayList<>();
-		int arrivalTimesLnegth = tripsNewForm.getArrivalTimes().size();
-		for (int i = 0; i < arrivalTimesLnegth; i++) {
+		int arrivalTimesLength = tripsNewForm.getArrivalTimes().size();
+		System.out.println("到着時間長" + arrivalTimesLength);
+		System.out.println("tripsNewFormの中身=" + tripsNewForm);
+		for (int i = 0; i < arrivalTimesLength; i++) {
 			//偶数行
+			System.out.println("偶数行開始 i=" + i);
 			rowSequence.add(i * 2);
 			purposeIds.add(1);
 			startTime.add(tripsNewForm.getDepartTimes().get(i));
@@ -148,8 +147,10 @@ public class TripsController {
 					tripsNewForm.getLatitudes().get(i), tripsNewForm.getLongitudes().get(i)));
 			departureName.add(tripsNewForm.getPlaceNames().get(i));
 			arrivalName.add(tripsNewForm.getPlaceNames().get(i + 1));
+			System.out.println("偶数行終了 i=" + i);
 			//奇数行
-			if (i == arrivalTimesLnegth - 1) {
+			System.out.println("奇数行開始 i=" + i);
+			if (i == arrivalTimesLength - 1) {
 				break;
 			}
 			rowSequence.add(i * 2 + 1);
@@ -159,6 +160,7 @@ public class TripsController {
 			departurePrefectureIds.add(null);
 			departureName.add("");
 			arrivalName.add("");
+			System.out.println("奇数行終了 i=" + i);
 		}
 
 		if (tripsNewForm.getTitles() == null) {
@@ -281,18 +283,17 @@ public class TripsController {
 			tagStrings.add(tags.get(id - 1).getName());
 		});
 		itineraryForm.setTagStrings(tagStrings);
-		
+
 		//textareaの改行を<br>に変換
 		List<String> usedBrDescriptions = new ArrayList<>();
 		itineraryForm.getDescriptions().forEach(description -> {
-			if(description != null && !description.isEmpty()) {
+			if (description != null && !description.isEmpty()) {
 				usedBrDescriptions.add(description.replaceAll("\r\n", "<br>"));
 			} else {
 				usedBrDescriptions.add("");
 			}
 		});
 		itineraryForm.setUsedBrDescriptions(usedBrDescriptions);
-		
 
 		model.addAttribute("itineraryForm", itineraryForm);
 		return "trips/confirm";

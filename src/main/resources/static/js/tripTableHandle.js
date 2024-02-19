@@ -115,11 +115,11 @@ function secondsToHHMM(time) {
 function addPlaceNameField(placeName) {
 	let tableHtml = '<tr>';
 	tableHtml += '<td class="days"></td>';
-	tableHtml += '<input type="hidden" name="days"><!-- hidden -->'
+	tableHtml += '<input type="hidden" name="days"><!-- hidden -->';
 	tableHtml += '<td class="arrival-times"></td>';
-	tableHtml += '<input type="hidden" name="arrivalTimes"><!-- hidden -->'
+	tableHtml += '<input type="hidden" name="arrivalTimes"><!-- hidden -->';
 	tableHtml += '<td class="depart-times"></td>';
-	tableHtml += '<input type="hidden" name="departTimes"><!-- hidden -->'
+	tableHtml += '<input type="hidden" name="departTimes"><!-- hidden -->';
 	tableHtml += '<td><input type="time" value="01:00" class="entered-stay-times changeTime"></td>';
 	tableHtml += '<td class="pinName"></td>';
 	if (typeof placeName === 'string') {
@@ -127,6 +127,8 @@ function addPlaceNameField(placeName) {
 	} else {
 		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="経由地" ></td>';
 	}
+	tableHtml += '<input type="hidden" name="latitudes"><!-- hidden -->';
+	tableHtml += '<input type="hidden" name="longitudes"><!-- hidden -->';
 	tableHtml += '<td><button class="handle btn btn-sm" type="button"><i class="bi bi-list"></i></button></td>';
 	tableHtml += '<td><button class="deletePlaceNameField btn btn-sm" type="button"><i class="bi bi-x-square"></i></button></td>';
 	tableHtml += '</tr>';

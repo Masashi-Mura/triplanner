@@ -16,10 +16,6 @@ public class Prefecture extends AbstractEntity{
 	@Column
 	private Integer id;
 	
-	/** reagion_id */
-	@Column(name = "region_id")
-	private Integer regionId;
-	
 	/** 都道府県名 */
 	@Column(name = "prefecture_name", length = 255)
 	private String name;
