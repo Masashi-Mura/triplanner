@@ -69,23 +69,13 @@
 											<input type="hidden" name=rowSequences
 												th:value="${#object.rowSequences[i]}">
 											<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-											<td><select name="purposeIds" class="form-select" required>
-													<th:block th:if="${#object.purposeIds[1] == 0}">
-														<option value="" selected hidden>選択してください</option>
-														<th:block th:each="purpose : ${purposes}">
-															<option th:value="${purpose.id}"
-																th:text="${purpose.purpose}">
-															</option>
-														</th:block>
-													</th:block>
-													<th:block th:if="${#object.purposeIds[1] != 0}">
+											<td><select name="purposeIds" class="form-select">
 														<th:block th:each="purpose : ${purposes}">
 															<option th:value="${purpose.id}"
 																th:text="${purpose.purpose}"
 																th:selected="${purpose.id == #object.purposeIds[i]}">
 															</option>
 														</th:block>
-													</th:block>
 												</select></td>
 											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">00:00
 											</td>
@@ -115,9 +105,7 @@
 						</table>
 					</div>
 				</div> <!-- row閉じ ここまで旅程表-->
-<!--				<p th:if="${#fields.hasErrors('purposeIds')}" th:errors="*{purposeIds}" th:errorclass="error-message">-->
-<!--				</p>-->
-				<div class="mb-3">
+				<div class="row mb-3">
 					<div class="col-md-4">
 						<label for="tripTitle" class="form-label">旅のタイトル</label>
 						<div class="w-100"></div>
@@ -128,7 +116,6 @@
 						</p>
 					</div>
 				</div>
-
 				<!-- タグをDBから取得して表示する-->
 				<div class="row mb-3">
 					<label class="form-label">タグ</label>

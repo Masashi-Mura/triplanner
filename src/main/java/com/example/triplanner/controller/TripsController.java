@@ -154,7 +154,7 @@ public class TripsController {
 				break;
 			}
 			rowSequence.add(i * 2 + 1);
-			purposeIds.add(0);
+			purposeIds.add(2);
 			startTime.add(tripsNewForm.getArrivalTimes().get(i));
 			endTime.add(tripsNewForm.getDepartTimes().get(i + 1));
 			departurePrefectureIds.add(null);
@@ -257,6 +257,8 @@ public class TripsController {
 			model.addAttribute("publicOptions", publicOptions);
 			List<Purpose> purposes = purposeRepository.findAllByOrderById();
 			model.addAttribute("purposes", purposes);
+			//purposeIdのバリデーションエラーメッセージ
+			model.addAttribute("purposeIdsMessage", "行動のプルダウンを全て選択してください");
 
 			return "trips/itinerary";
 		}
