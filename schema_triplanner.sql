@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS regions_master CASCADE;
 DROP TABLE IF EXISTS prefectures_master CASCADE;
 DROP TABLE IF EXISTS purposes_master CASCADE;
 DROP TABLE IF EXISTS public_options_master CASCADE;
@@ -10,83 +9,62 @@ DROP TABLE IF EXISTS itineraries CASCADE;
 DROP TABLE IF EXISTS favorites CASCADE;
 
 -- ▽▽▽▽以下マスタ関係▽▽▽▽
-CREATE TABLE IF NOT EXISTS regions_master (
-  id INTEGER CHECK(id > 0) NOT NULL,
-  region_name VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL,
-  PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS prefectures_master (
   id INTEGER CHECK(id >= 1) NOT NULL,
-  region_id INTEGER NOT NULL,
   prefecture_name VARCHAR(255) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL,
   PRIMARY KEY (id)
 );
 
-ALTER TABLE prefectures_master ADD CONSTRAINT FK_prefectures_region FOREIGN KEY (region_id) REFERENCES regions_master (id);
-
-INSERT INTO regions_master VALUES
-  (1,'北海道地方',NOW(),NOW()),
-  (2,'東北地方',NOW(),NOW()),
-  (3,'関東地方',NOW(),NOW()),
-  (4,'中部地方',NOW(),NOW()),
-  (5,'近畿地方',NOW(),NOW()),
-  (6,'中国地方',NOW(),NOW()),
-  (7,'四国地方',NOW(),NOW()),
-  (8,'九州地方',NOW(),NOW());
-
 INSERT INTO prefectures_master VALUES
-  (1,1,'北海道',NOW(),NOW()),
-  (2,2,'青森県',NOW(),NOW()),
-  (3,2,'岩手県',NOW(),NOW()),
-  (4,2,'宮城県',NOW(),NOW()),
-  (5,2,'秋田県',NOW(),NOW()),
-  (6,2,'山形県',NOW(),NOW()),
-  (7,2,'福島県',NOW(),NOW()),
-  (8,3,'茨城県',NOW(),NOW()),
-  (9,3,'栃木県',NOW(),NOW()),
-  (10,3,'群馬県',NOW(),NOW()),
-  (11,3,'埼玉県',NOW(),NOW()),
-  (12,3,'千葉県',NOW(),NOW()),
-  (13,3,'東京都',NOW(),NOW()),
-  (14,3,'神奈川県',NOW(),NOW()),
-  (15,4,'新潟県',NOW(),NOW()),
-  (16,4,'富山県',NOW(),NOW()),
-  (17,4,'石川県',NOW(),NOW()),
-  (18,4,'福井県',NOW(),NOW()),
-  (19,4,'山梨県',NOW(),NOW()),
-  (20,4,'長野県',NOW(),NOW()),
-  (21,4,'岐阜県',NOW(),NOW()),
-  (22,4,'静岡県',NOW(),NOW()),
-  (23,4,'愛知県',NOW(),NOW()),
-  (24,5,'三重県',NOW(),NOW()),
-  (25,5,'滋賀県',NOW(),NOW()),
-  (26,5,'京都府',NOW(),NOW()),
-  (27,5,'大阪府',NOW(),NOW()),
-  (28,5,'兵庫県',NOW(),NOW()),
-  (29,5,'奈良県',NOW(),NOW()),
-  (30,5,'和歌山県',NOW(),NOW()),
-  (31,6,'鳥取県',NOW(),NOW()),
-  (32,6,'島根県',NOW(),NOW()),
-  (33,6,'岡山県',NOW(),NOW()),
-  (34,6,'広島県',NOW(),NOW()),
-  (35,6,'山口県',NOW(),NOW()),
-  (36,7,'徳島県',NOW(),NOW()),
-  (37,7,'香川県',NOW(),NOW()),
-  (38,7,'愛媛県',NOW(),NOW()),
-  (39,7,'高知県',NOW(),NOW()),
-  (40,8,'福岡県',NOW(),NOW()),
-  (41,8,'佐賀県',NOW(),NOW()),
-  (42,8,'長崎県',NOW(),NOW()),
-  (43,8,'熊本県',NOW(),NOW()),
-  (44,8,'大分県',NOW(),NOW()),
-  (45,8,'宮崎県',NOW(),NOW()),
-  (46,8,'鹿児島県',NOW(),NOW()),
-  (47,8,'沖縄県',NOW(),NOW());
+  (1,'北海道',NOW(),NOW()),
+  (2,'青森県',NOW(),NOW()),
+  (3,'岩手県',NOW(),NOW()),
+  (4,'宮城県',NOW(),NOW()),
+  (5,'秋田県',NOW(),NOW()),
+  (6,'山形県',NOW(),NOW()),
+  (7,'福島県',NOW(),NOW()),
+  (8,'茨城県',NOW(),NOW()),
+  (9,'栃木県',NOW(),NOW()),
+  (10,'群馬県',NOW(),NOW()),
+  (11,'埼玉県',NOW(),NOW()),
+  (12,'千葉県',NOW(),NOW()),
+  (13,'東京都',NOW(),NOW()),
+  (14,'神奈川県',NOW(),NOW()),
+  (15,'新潟県',NOW(),NOW()),
+  (16,'富山県',NOW(),NOW()),
+  (17,'石川県',NOW(),NOW()),
+  (18,'福井県',NOW(),NOW()),
+  (19,'山梨県',NOW(),NOW()),
+  (20,'長野県',NOW(),NOW()),
+  (21,'岐阜県',NOW(),NOW()),
+  (22,'静岡県',NOW(),NOW()),
+  (23,'愛知県',NOW(),NOW()),
+  (24,'三重県',NOW(),NOW()),
+  (25,'滋賀県',NOW(),NOW()),
+  (26,'京都府',NOW(),NOW()),
+  (27,'大阪府',NOW(),NOW()),
+  (28,'兵庫県',NOW(),NOW()),
+  (29,'奈良県',NOW(),NOW()),
+  (30,'和歌山県',NOW(),NOW()),
+  (31,'鳥取県',NOW(),NOW()),
+  (32,'島根県',NOW(),NOW()),
+  (33,'岡山県',NOW(),NOW()),
+  (34,'広島県',NOW(),NOW()),
+  (35,'山口県',NOW(),NOW()),
+  (36,'徳島県',NOW(),NOW()),
+  (37,'香川県',NOW(),NOW()),
+  (38,'愛媛県',NOW(),NOW()),
+  (39,'高知県',NOW(),NOW()),
+  (40,'福岡県',NOW(),NOW()),
+  (41,'佐賀県',NOW(),NOW()),
+  (42,'長崎県',NOW(),NOW()),
+  (43,'熊本県',NOW(),NOW()),
+  (44,'大分県',NOW(),NOW()),
+  (45,'宮崎県',NOW(),NOW()),
+  (46,'鹿児島県',NOW(),NOW()),
+  (47,'沖縄県',NOW(),NOW());
 
 
 CREATE TABLE IF NOT EXISTS purposes_master (
