@@ -37,7 +37,7 @@
 										<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
 										<td><span
 												th:text="${#object.departureNames[i]} + '&nbsp;&rArr;&nbsp;' + ${#object.arrivalNames[i]}"></span><br>
-											<span th:text="${#object.descriptions[i]}"></span>
+											<span th:utext="${#object.usedBrDescriptions[i]}"></span>
 										</td>
 									</tr>
 								</th:block>
@@ -50,7 +50,7 @@
 										<td>～</td>
 										<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
 										<td><span th:text="${#object.titles[i]}"></span><BR>
-											<span th:text="${#object.descriptions[i]}"></span>
+											<span th:utext="${#object.usedBrDescriptions[i]}"></span>
 										</td>
 									</tr>
 								</th:block>
@@ -107,7 +107,7 @@
 				<input type="hidden" name="tripTitle" th:value="*{tripTitle}">
 				<input type="hidden" name="publicId" th:value="*{publicId}">
 				<input type="hidden" th:each="tagId : ${#object.tagIds}" name="tagIds" th:value="${tagId}">
-				<input type="hidden" name="fromConfirm" th:value="true">
+<!--				<input type="hidden" name="fromConfirm" th:value="true">-->
 			</form>
 		</div>
 	</div>
