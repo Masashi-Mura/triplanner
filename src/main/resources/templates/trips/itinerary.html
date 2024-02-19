@@ -13,7 +13,7 @@
 			<form id="submit" action="#" method="post" th:object="${itineraryForm}">
 				<div class="row">
 					<div class="col">
-<!--						<p th:if="${#fields.hasErrors('purposeIds')}" th:errors="*{purposeIds}" th:errorclass="error-msg"></p>-->
+
 						<table class="table table-striped">
 							<thead>
 								<tr>
@@ -52,8 +52,8 @@
 												th:value="${#object.departurePrefectureIds[i]}"><!-- hidden -->
 											<td><span
 													th:text="${#object.departureNames[i]} + '&nbsp;&rArr;&nbsp;' + ${#object.arrivalNames[i]}"></span><br>
-												<textarea rows="1" cols="50" name="descriptions" placeholder="内容"
-													th:text="${#object.descriptions[i]}"></textarea>
+												<textarea class="form-control" rows="1" name="descriptions"
+													placeholder="内容" th:text="${#object.descriptions[i]}">内容</textarea>
 											</td>
 											<input type="hidden" name="departureNames"
 												th:value="${#object.departureNames[i]}"><!-- hidden -->
@@ -96,10 +96,11 @@
 											<input type="hidden" name="endTimes"
 												th:value="${#object.endTimes[i]}"><!-- hidden -->
 
-											<td><input type="text" name="titles" placeholder="タイトル"
-													th:value="${#object.titles[i]}"><BR>
-												<textarea rows="4" cols="50" name="descriptions" placeholder="内容"
-													th:text="${#object.descriptions[i]}"></textarea>
+											<td><input class="form-control" type="text" name="titles" placeholder="タイトル"
+													th:value="${#object.titles[i]}">
+													<div class="w-100"></div>
+												<textarea class="form-control" style="height: 100px" name="descriptions"
+													placeholder="内容" th:text="${#object.descriptions[i]}">内容</textarea>
 											</td>
 											<input type="hidden" name="departurePrefectureIds"
 												th:value="${#object.departurePrefectureIds[i]}"><!-- hidden -->
@@ -114,14 +115,23 @@
 						</table>
 					</div>
 				</div> <!-- row閉じ ここまで旅程表-->
-				<label for="tripTitle" class="form-label">旅のタイトル</label><br>
-<!--				<p th:if="${#fields.hasErrors('tripTitle')}" th:errors="*{tripTitle}" th:errorclass="error-msg"></p>-->
-				<input type="text" id="tripTitle" class="mb-3" name="tripTitle" placeholder="旅のタイトル"
-					th:value="${#object.tripTitle}"><br>
+<!--				<p th:if="${#fields.hasErrors('purposeIds')}" th:errors="*{purposeIds}" th:errorclass="error-message">-->
+<!--				</p>-->
+				<div class="mb-3">
+					<div class="col-md-4">
+						<label for="tripTitle" class="form-label">旅のタイトル</label>
+						<div class="w-100"></div>
+						<input class="form-control" type="text" id="tripTitle" name="tripTitle" placeholder="旅のタイトル"
+							th:value="${#object.tripTitle}">
+						<p th:if="${#fields.hasErrors('tripTitle')}" th:errors="*{tripTitle}"
+							th:errorclass="error-message">
+						</p>
+					</div>
+				</div>
+
 				<!-- タグをDBから取得して表示する-->
 				<div class="row mb-3">
 					<label class="form-label">タグ</label>
-<!--					<p th:if="${#fields.hasErrors('tagIds')}" th:errors="*{tagIds}" th:errorclass="error-msg"></p>-->
 					<div class="col-md-4">
 						<th:block th:each="tag : ${tags}">
 							<div class="form-check form-check-inline">
@@ -132,6 +142,8 @@
 							</div>
 						</th:block>
 					</div>
+					<p th:if="${#fields.hasErrors('tagIds')}" th:errors="*{tagIds}" th:errorclass="error-message">
+					</p>
 				</div><!-- row閉じ  ここまでがタグ-->
 				<!-- 公開オプションをDBから取得して表示する-->
 				<div class="row mb-4">

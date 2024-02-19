@@ -93,7 +93,7 @@ public class TripsController {
 	@PostMapping("/itinerary")
 	public String newItinerary(@Validated TripsNewForm tripsNewForm,
 			BindingResult result, ItineraryForm itineraryForm, Model model) {
-		System.out.println("旅程作成画面コントローラ");
+		System.out.println("旅程作成画面コントローラ開始");
 		// TripsNewFormのバリデーションエラー有
 		if (result.hasErrors()) {
 			//出発時刻をLocalDateからLocalDateTimeに変換しmodelに追加
@@ -109,9 +109,13 @@ public class TripsController {
 		}
 
 		// confirm画面から遷移。
-		if (itineraryForm.getFromConfirm() == true) {
+		if (!itineraryForm.getTripTitle().equals("")) {
 			//confirm画面のデータをmodelに追加
 			model.addAttribute("itineraryForm", itineraryForm);
+			//itineraryFormの初期化
+			if (itineraryForm.getTagIds() == null) {
+				itineraryForm.setTagIds(new ArrayList<>());
+			}
 			//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
 			List<Tag> tags = tagRepository.findAllByOrderById();
 			model.addAttribute("tags", tags);
@@ -180,11 +184,10 @@ public class TripsController {
 		itineraryForm.setTripTitle(tripsNewForm.getTripTitle());
 		itineraryForm.setPublicId(tripsNewForm.getPublicId());
 		if (tripsNewForm.getTagIds() == null) {
-			tripsNewForm.setTagIds(new ArrayList<>());
+			itineraryForm.setTagIds(new ArrayList<>());
 		} else {
-			tripsNewForm.setTagIds(tripsNewForm.getTagIds());
+			itineraryForm.setTagIds(tripsNewForm.getTagIds());
 		}
-		itineraryForm.setTagIds(tripsNewForm.getTagIds());
 		model.addAttribute("itineraryForm", itineraryForm);
 
 		//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
@@ -236,12 +239,15 @@ public class TripsController {
 		return "trips/new";
 	}
 
-	//旅程確認登録画面
+	//旅程確認画面
 	@PostMapping("/confirm")
 	public String newItineraryConfirm(@Validated ItineraryForm itineraryForm, BindingResult result, Model model) {
 		if (result.hasErrors()) {
+			//itineraryFormを設定
+			if (itineraryForm.getTagIds() == null) {
+				itineraryForm.setTagIds(new ArrayList<>());
+			}
 			model.addAttribute("itineraryForm", itineraryForm);
-
 			//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
 			List<Tag> tags = tagRepository.findAllByOrderById();
 			model.addAttribute("tags", tags);
@@ -275,6 +281,18 @@ public class TripsController {
 			tagStrings.add(tags.get(id - 1).getName());
 		});
 		itineraryForm.setTagStrings(tagStrings);
+		
+		//textareaの改行を<br>に変換
+		List<String> usedBrDescriptions = new ArrayList<>();
+		itineraryForm.getDescriptions().forEach(description -> {
+			if(description != null && !description.isEmpty()) {
+				usedBrDescriptions.add(description.replaceAll("\r\n", "<br>"));
+			} else {
+				usedBrDescriptions.add("");
+			}
+		});
+		itineraryForm.setUsedBrDescriptions(usedBrDescriptions);
+		
 
 		model.addAttribute("itineraryForm", itineraryForm);
 		return "trips/confirm";
