@@ -28,6 +28,9 @@ function changeTimes() {
 		$('.depart-times').each(function() {
 			$(this).text("");
 		});
+		$('.duration-times').each(function() {
+			$(this).text("");
+		});
 		//次ページ遷移時のvalidation用データをリセット
 		$('input[name="arrivalTimes"]').each(function() {
 			$(this).val(null);
@@ -89,7 +92,14 @@ function changeTimes() {
 		$(this).text(arrivalTimes[index].format('HH:mm'));
 	});
 	$('.depart-times').each(function(index) {
-		$(this).text(departTimes[index + 1].format('HH:mm'));
+		if (departTimes.length > index + 1) {
+			$(this).text(departTimes[index + 1].format('HH:mm'));
+		}
+	});
+	$('.duration-times').each(function(index) {
+		if (durationTimeValues.length > index) {
+			$(this).text(durationTimeValues[index]);
+		}
 	});
 
 	// 結果を（type="hidden"）に出力
@@ -97,7 +107,9 @@ function changeTimes() {
 		$(this).val(arrivalTimes[index].format('YYYY-MM-DDTHH:mm'));
 	});
 	$('input[name="departTimes"]').each(function(index) {
-		$(this).val(departTimes[index].format('YYYY-MM-DDTHH:mm'));
+		if (departTimes.length > index) {
+			$(this).val(departTimes[index].format('YYYY-MM-DDTHH:mm'));
+		}
 	});
 };
 
@@ -107,12 +119,31 @@ function secondsToHHMM(time) {
 	let minutes = Math.ceil(time / 60);
 	let hour = Math.floor(minutes / 60);
 	minutes = minutes % 60;
-	return `${hour}:${minutes}`;
+	let formattedMinutes = minutes.toString().padStart(2, '0');
+	let formattedHour = hour.toString().padStart(2, '0');
+	return `${formattedHour}:${formattedMinutes}`;
+}
+
+// 出発地の欄に文字を設定
+async function setStartPlaceName(placeName) {
+	let startPlaceNameValue = $('.placeName').eq(0).val();
+	if (startPlaceNameValue == null || startPlaceNameValue == "") {
+		$('.placeName').eq(0).val(placeName);
+	} else {
+		let result = window.confirm("出発地は既に設定されています。変更しますか？");
+		if (result) {
+			$('.placeName').eq(0).val(placeName);
+		}
+	}
 }
 
 
-// 経由地欄を１行追加、出発到着時間の表示をリセットする関数
-function addPlaceNameField(placeName) {
+// 目的地欄を１行追加、出発到着時間の表示をリセットする関数
+async function addPlaceNameField(placeName) {
+	//現在の最後の目的地欄に滞在時間を表示する
+	$('.display-none').removeClass('display-none');
+
+	//目的地欄を１行追加
 	let tableHtml = '<tr>';
 	tableHtml += '<td class="days"></td>';
 	tableHtml += '<input type="hidden" name="days"><!-- hidden -->';
@@ -120,15 +151,16 @@ function addPlaceNameField(placeName) {
 	tableHtml += '<input type="hidden" name="arrivalTimes"><!-- hidden -->';
 	tableHtml += '<td class="depart-times"></td>';
 	tableHtml += '<input type="hidden" name="departTimes"><!-- hidden -->';
-	tableHtml += '<td><input type="time" value="01:00" class="entered-stay-times changeTime"></td>';
+	tableHtml += '<td class="duration-times"></td>';
 	tableHtml += '<td class="pinName"></td>';
 	if (typeof placeName === 'string') {
-		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="経由地" value="' + placeName + '"></td>';
+		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="目的地" value="' + placeName + '"></td>';
 	} else {
-		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="経由地" ></td>';
+		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="目的地" ></td>';
 	}
 	tableHtml += '<input type="hidden" name="latitudes"><!-- hidden -->';
 	tableHtml += '<input type="hidden" name="longitudes"><!-- hidden -->';
+	tableHtml += '<td><input type="time" value="01:00" class="entered-stay-times changeTime display-none"></td>';
 	tableHtml += '<td><button class="handle btn btn-sm" type="button"><i class="bi bi-list"></i></button></td>';
 	tableHtml += '<td><button class="deletePlaceNameField btn btn-sm" type="button"><i class="bi bi-x-square"></i></button></td>';
 	tableHtml += '</tr>';
@@ -142,28 +174,33 @@ function addPlaceNameField(placeName) {
 	changeTimes();
 };
 
-// 経由地欄を１行削除、出発到着時間の表示をリセットする関数
+// 目的地欄を１行削除、出発到着時間の表示をリセットする関数
 function deletePlaceNameField() {
+	//目的地欄の１行を削除
 	$(this).closest("tr").find("*").remove();
+	//最後の目的地欄の滞在時間にdisplay-noneクラスを設定する
+	$('.display-none').removeClass('display-none');
+	$('.entered-stay-times').last().addClass('display-none');
+	//出発到着時間のリセット
 	durationSecondsValues = [];
 	changeTimes();
 };
 
-// 引数を経由地欄に追加する関数
+// 引数を目的地欄に追加する関数
 function addPlaceName(keywordPlaceName) {
-	//経由地欄情報を取得
+	//目的地欄情報を取得
 	waypointPlaceNames = [];
 	$(".waypoint").each(function() {
 		waypointPlaceNames.push($(this).val());
 	});
-	//経由地に引数と同じ名称があるか確認
+	//目的地に引数と同じ名称があるか確認
 	if (waypointPlaceNames.includes(keywordPlaceName)) {
-		let result = window.confirm("既に経由地に指定されています。\n追加しますか？");
+		let result = window.confirm("既に目的地に指定されています。\n追加しますか？");
 		if (!result) {
 			return;
 		}
 	}
-	//空きの経由地欄に引数を追加
+	//空きの目的地欄に引数を追加
 	let wayptsElements = document.querySelectorAll('.waypoint');
 	for (let i = 0; i < waypointPlaceNames.length; i++) {
 		if (wayptsElements[i].value === "") {
@@ -171,10 +208,10 @@ function addPlaceName(keywordPlaceName) {
 			return;
 		}
 	}
-	//経由地欄を１つ追加し、引数を追加。
+	//目的地欄を１つ追加し、引数を追加。
 	addPlaceNameField(keywordPlaceName);
 
-	//	window.alert("経由地がいっぱいです。\n経由地欄を追加してください。");
+	//	window.alert("目的地がいっぱいです。\n目的地欄を追加してください。");
 }
 
 //SortableJSの導入 https://github.com/SortableJS/Sortable/blob/master/README.md
@@ -197,6 +234,10 @@ Sortable.create(sortableRow, {
 		//ドラッグ前後での順序を比較
 		let isEqual = JSON.stringify(beforeSortableWaypoints) === JSON.stringify(afterSortableWaypoints);
 		if (!isEqual) {
+			//最後の目的地欄の滞在時間にdisplay-noneクラスを設定する
+			$('.display-none').removeClass('display-none');
+			$('.entered-stay-times').last().addClass('display-none');
+			//出発到着時間のリセット
 			durationSecondsValues = [];
 			changeTimes();
 		}
@@ -207,7 +248,7 @@ Sortable.create(sortableRow, {
 // 全てのchangeTimeクラスにイベントリスナーを設定
 $('.changeTime').on('change', changeTimes);
 
-// 経由地追加ボタンにイベントリスナーを設定
+// 目的地追加ボタンにイベントリスナーを設定
 $('#addPlaceNameField').on('click', addPlaceNameField);
 
 // 削除ボタンにイベントリスナーを設定

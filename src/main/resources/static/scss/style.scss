@@ -183,7 +183,7 @@ nav.navbar {
 
 .trips-new-wrapper {
 	padding-top: 40px;
-	height: 100vh;
+	height: calc(100vh - 40px);
     .container {
 		height: 100%;
 	}
@@ -216,6 +216,10 @@ nav.navbar {
 	.scrollable {
 		max-height: 100%;
 		overflow-y: auto;
+	}
+	
+	.display-none {
+		display: none;
 	}
 }
 

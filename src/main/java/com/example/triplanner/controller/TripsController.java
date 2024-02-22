@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.triplanner.component.ReverceGeocoder;
+import com.example.triplanner.component.ReverseGeocoder;
 import com.example.triplanner.entity.Prefecture;
 import com.example.triplanner.entity.PublicOption;
 import com.example.triplanner.entity.Purpose;
@@ -45,7 +45,7 @@ public class TripsController {
 	private PurposeRepository purposeRepository;
 
 	@Autowired
-	private ReverceGeocoder reverceGeocoder;
+	private ReverseGeocoder reverceGeocoder;
 
 	//旅一覧画面
 	@GetMapping("/index")
@@ -63,23 +63,7 @@ public class TripsController {
 	@GetMapping("/new")
 	public String newTrip(Model model) {
 		System.out.println("new");
-		//出発時間、滞在時間、場所の初期値をmodelに設定
 		TripsNewForm tripsNewForm = new TripsNewForm();
-		List<LocalDateTime> departTimes = new ArrayList<>();
-		departTimes.add(LocalDateTime.of(2020, 1, 1, 8, 0, 0));
-		tripsNewForm.setDepartTimes(departTimes);
-		List<LocalTime> stayTimes = new ArrayList<>();
-		stayTimes.add(LocalTime.of(1, 30));
-		stayTimes.add(LocalTime.of(2, 0));
-		tripsNewForm.setStayTimes(stayTimes);
-		List<String> placeNames = new ArrayList<>();
-		placeNames.add("トヨタレンタカー大阪駅前");
-		placeNames.add("興福寺");
-		placeNames.add("平城宮跡歴史公園");
-		placeNames.add("トヨタレンタカー大阪駅前");
-		tripsNewForm.setPlaceNames(placeNames);
-		List<Integer> tagIds = new ArrayList<>();
-		tripsNewForm.setTagIds(tagIds);
 		model.addAttribute("tripsNewForm", tripsNewForm);
 
 		return "trips/new";
@@ -92,14 +76,14 @@ public class TripsController {
 		System.out.println("旅程作成画面コントローラ開始");
 		// TripsNewFormのバリデーションエラー有
 		if (result.hasErrors()) {
-			//出発時刻をLocalDateからLocalDateTimeに変換しmodelに追加
+			//出発地の出発時間をLocalDateからLocalDateTimeに変換しtripsNewFormに格納
 			LocalDateTime enteredDepartTime = LocalDateTime.of(LocalDate.of(2020, 1, 1),
-					tripsNewForm.getEnteredDepartTimeValue());
+					tripsNewForm.getEnteredStartTimeValue());
 			tripsNewForm.setDepartTimes(List.of(enteredDepartTime));
 			model.addAttribute("tripsNewForm", tripsNewForm);
 			//モデルにエラーの設定
 			model.addAttribute("hasMessage", true);
-			model.addAttribute("message", "ルート検索を行い時間を設定してください。");
+			model.addAttribute("message", "目的地を２カ所以上入力し、ルート検索を行い時間を設定してください。");
 
 			return "trips/new";
 		}
@@ -209,11 +193,7 @@ public class TripsController {
 		System.out.println("newTripに戻る");
 		//出発時間、滞在時間、場所をitineraryFormからtripsNewFormに変換
 		TripsNewForm tripsNewForm = new TripsNewForm();
-		//出発時間
-		List<LocalDateTime> departTimes = new ArrayList<>();
-		departTimes.add(itineraryForm.getStartTimes().get(0));
-		tripsNewForm.setDepartTimes(departTimes);
-		//滞在時間、場所
+		//滞在時間、場所を変換
 		List<LocalTime> stayTimes = new ArrayList<>();
 		List<String> placeNames = new ArrayList<>();
 		int rowSequencesLength = itineraryForm.getRowSequences().size();
@@ -232,6 +212,7 @@ public class TripsController {
 		}
 		tripsNewForm.setStayTimes(stayTimes);
 		tripsNewForm.setPlaceNames(placeNames);
+		tripsNewForm.setDepartTimes(itineraryForm.getStartTimes());
 		tripsNewForm.setTripTitle(itineraryForm.getTripTitle());
 		tripsNewForm.setPublicId(itineraryForm.getPublicId());
 		tripsNewForm.setTagIds(itineraryForm.getTagIds());

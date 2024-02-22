@@ -3,12 +3,13 @@ let directionsRenderer;
 let infoWindow;
 let map;
 let waypts;
+let enteredPlaceNames;
 let shopMarkers = [];
 let currentInfoWindow = null;
-let keywordPlaceName;//テスト
+let startOrDestination;
 
 function initMap() {
-	//マップ初期化
+	//マップ初期表示設定
 	const directionsService = new google.maps.DirectionsService();
 	directionsRenderer = new google.maps.DirectionsRenderer();
 	map = new google.maps.Map(document.getElementById("map"), {
@@ -17,16 +18,22 @@ function initMap() {
 		scaleControl: true,
 	});
 
+	marker = new google.maps.Marker();
+	infoWindow = new google.maps.InfoWindow();	//情報ウィンドウクラス
+
+	//出発地検索ボタンでマップにマーカー表示しスタート地点に設定
+	document.getElementById("submitStartPlaceName").addEventListener("click", () => {
+		searchPlace(directionsService, "start");
+	});
+
+	//目的地検索ボタンでマップにマーカー表示し目的地に追加
+	document.getElementById("submitPlaceName").addEventListener("click", () => {
+		searchPlace(directionsService, "destination");
+	});
+
 	//ルート検索ボタンでgoogleMap経路検索api実行
 	document.getElementById("routeSearch").addEventListener("click", () => {
 		calculateAndDisplayRoute(directionsService);
-	});
-
-	//場所検索ボタンでgoogleMap経路検索apiから位置情報取得しマーカー表示
-	marker = new google.maps.Marker();
-	infoWindow = new google.maps.InfoWindow();	//情報ウィンドウクラス
-	document.getElementById("submitPlaceName").addEventListener("click", () => {
-		searchPlace(directionsService);
 	});
 
 	//マップ中心付近のショップをapi検索
@@ -129,31 +136,19 @@ function searchShop(latlng) {
 
 }
 
-//単体場所確認のマーカー作成
-function createMarker(response) {
+//出発地、目的地検索時のマーカー作成
+function createMarker(response, searchPlaceName) {
 	marker.setMap(map);
 	marker.setPosition(response.routes[0].legs[0].start_location);
 
 	map.setZoom(12);
 	map.setCenter(response.routes[0].legs[0].start_location);
 
-	//マーカーに目的地追加ボタンを作成
 	const content = document.createElement("div");
-	const addButton = document.createElement("button");
-	addButton.id = "addPlaceNameButton";
-	addButton.classList.add("poi-info-window", "full-width");
-	addButton.textContent = "ここを経由地に追加";
-	content.appendChild(addButton);
-
-	//addButtonにクリックイベントリスナーを追加
-	addButton.addEventListener("click", function() {
-		addPlaceName(document.getElementById("searchPlaceName").value);
-	});
-
 	// keywordPlaceName の値を取得して新しい div に追加
 	const keywordDiv = document.createElement("div");
 	keywordDiv.classList.add("poi-info-window", "full-width");
-	keywordDiv.textContent = document.getElementById("searchPlaceName").value;
+	keywordDiv.textContent = response.request.origin.query;
 	content.appendChild(keywordDiv);
 
 	// response.routes[0].legs[0].start_address の値を取得して新しい div に追加
@@ -174,20 +169,71 @@ function createMarker(response) {
 }
 
 //単体の場所検索関数（ルート検索と同じ地点にするためdirectionsを使用)
-function searchPlace(directionsService) {
+function searchPlace(directionsService, startOrDestination) {
 	clear();
-	directionsService
-		.route({
-			origin: document.getElementById("searchPlaceName").value,
-			destination: document.getElementById("searchPlaceName").value,
-			travelMode: google.maps.TravelMode.DRIVING,
-			avoidHighways: true,
-			avoidTolls: true,
-		})
-		.then((response) => {
-			createMarker(response, map);
-		})
-		.catch((e) => window.alert("Directions request failed due to " + e));
+	let keywordPlaceName;
+	if (startOrDestination == "start") {
+		keywordPlaceName = document.getElementById("searchStartPlaceName").value;
+	} else {
+		keywordPlaceName = document.getElementById("searchPlaceName").value;
+	}
+	let request = {
+		origin: keywordPlaceName,
+		destination: keywordPlaceName,
+		travelMode: google.maps.TravelMode.DRIVING,
+		avoidHighways: true,
+		avoidTolls: true,
+	};
+
+	directionsService.route(request, function(response, status) {
+		if (status !== "OK") {
+			alertErrorMessage(status);
+		} else {
+
+			switch (startOrDestination) {
+				case "start":
+					createMarker(response);
+					setStartPlaceName(document.getElementById("searchStartPlaceName").value);
+					break;
+				case "destination":
+					createMarker(response);
+					addPlaceName(document.getElementById("searchPlaceName").value);
+					break;
+				default:
+					window.alert("出発地、目的地の検索でエラーが発生しました。エラーの発生状況を開発者に問い合わせて下さい。")
+					break;
+			}
+		}
+	})
+}
+
+//directionsService.routeエラー時のエラーメッセージ表示
+function alertErrorMessage(status) {
+	switch (status) {
+		case "INVALID_REQUEST":
+			window.alert("リクエストが無効です。エラー名：" + status + "。エラーの発生状況を開発者に問い合わせて下さい。")
+			break;
+		case "MAX_WAYPOINTS_EXCEEDED":
+			window.alert("経由地点が多すぎます。経由地点を減らして再度実行してください。")
+			break;
+		case "NOT_FOUND":
+			window.alert("名称が見つかりません。名称を変更するか、名称の後ろに都道府県や地名を追加して再度実行してください。");
+			break;
+		case "OVER_QUERY_LIMIT":
+			window.alert("短期間にリクエストの制限回数を超えました。少し時間をおいて追加ボタンを押して下さい。")
+			break;
+		case "REQUEST_DENIED":
+			window.alert("リクエストが拒否されました。エラー名：" + status + "。エラーの発生状況を開発者に問い合わせて下さい。")
+			break;
+		case "UNKNOWN_ERROR":
+			window.alert("サーバーでエラーが発生しました。時間をおいて追加ボタンを押して下さい。")
+			break;
+		case "ZERO_RESULTS":
+			window.alert("ルートが見つかりません。目的地を変更してください。")
+			break;
+		default:
+			window.alert("エラーが発生しました。エラー名：" + status + "。エラーの発生状況を開発者に問い合わせて下さい。")
+	}
 }
 
 //マップ初期化関数
@@ -214,31 +260,42 @@ function calculateAndDisplayRoute(directionsService) {
 	});
 
 	//入力された全地名を取得
-	let enterdPlaceNames = [];
+	enteredPlaceNames = [];
 	$(".placeName").each(function() {
-		enterdPlaceNames.push($(this).val());
+		enteredPlaceNames.push($(this).val());
 	});
 
 	//googleMapAPI検索オプションの経由地を設定
-	for (let i = 0; enterdPlaceNames.length - 2 > i; i++) {
+	for (let i = 0; enteredPlaceNames.length - 2 > i; i++) {
 		waypts.push({
-			location: enterdPlaceNames[i + 1],
+			location: enteredPlaceNames[i + 1],
 			stopover: true, //経由地を停止地点とする
 		});
 	}
 
 	//googleMapAPIでルートを検索、結果をマップと表に表示
-	directionsService
-		.route({
-			origin: enterdPlaceNames[0],
-			destination: enterdPlaceNames[enterdPlaceNames.length - 1],
-			waypoints: waypts,
-			optimizeWaypoints: document.getElementById('optimizeWaypoints').checked,  //経由地最適化の有無
-			travelMode: google.maps.TravelMode.DRIVING,  //自動車で移動
-			avoidHighways: !document.getElementById('permitHighways').checked,  //高速道路使用の有無
-			avoidTolls: !document.getElementById('permitHighways').checked,  //有料道路使用の有無
-		})
-		.then((response) => {
+	let request = {
+		origin: enteredPlaceNames[0],
+		destination: enteredPlaceNames[enteredPlaceNames.length - 1],
+		waypoints: waypts,
+		optimizeWaypoints: document.getElementById('optimizeWaypoints').checked,  //経由地最適化の有無
+		travelMode: google.maps.TravelMode.DRIVING,  //自動車で移動
+		avoidHighways: !document.getElementById('permitHighways').checked,  //高速道路使用の有無
+		avoidTolls: !document.getElementById('permitHighways').checked,  //有料道路使用の有無
+	}
+
+	directionsService.route(request, function(response, status) {
+		if (status == "NOT_FOUND") {
+			let errorPlaceNames = [];
+			response.geocoded_waypoints.forEach((waypoint, index) => {
+				if (waypoint.geocoder_status !== "OK") {
+					errorPlaceNames.push(enteredPlaceNames[index]);
+				}
+			})
+			window.alert(errorPlaceNames + "の名称が見つかりません。名称を変更するか、名称の後ろに都道府県や地名を追加して再度実行してください。");
+		} else if (status !== "OK") {
+			alertErrorMessage(status);
+		} else {
 			directionsRenderer.setDirections(response);
 
 			const route = response.routes[0];
@@ -277,22 +334,26 @@ function calculateAndDisplayRoute(directionsService) {
 			changeTimes();
 
 			//場所の緯度経度を（type="hidden"）に出力
-			//			let latitudesLength = $('input[name="latitudes"]').length;
 			//latitudeを出力
+			let latitudesLength = route.legs.length;;
 			$('input[name="latitudes"]').each(function(index) {
-				//				if (index !== latitudesLength - 1) {
-				$(this).val(route.legs[index].start_location.lat());
-				//				};
+				if (index < latitudesLength - 1) {
+					$(this).val(route.legs[index].start_location.lat());
+				} else if (index == latitudesLength - 1) {
+					$(this).val(route.legs[index - 1].end_location.lat());
+				}
 			});
 			//longitudeを出力
 			$('input[name="longitudes"]').each(function(index) {
-				//				if (index !== latitudesLength - 1) {
-				$(this).val(route.legs[index].start_location.lng());
-				//				};
+				if (index < latitudesLength - 1) {
+					$(this).val(route.legs[index].start_location.lng());
+				} else if (index == latitudesLength - 1) {
+					$(this).val(route.legs[index - 1].end_location.lng());
+				}
 			});
+		}
+	})
 
-		})
-		.catch((e) => window.alert("Directions request failed due to " + e));
 }
 
 window.initMap = initMap;
