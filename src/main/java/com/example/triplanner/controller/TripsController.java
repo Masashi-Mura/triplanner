@@ -83,13 +83,7 @@ public class TripsController {
 					tripsNewForm.getEnteredStartTimeValue());
 			tripsNewForm.setDepartTimes(List.of(enteredDepartTime));
 			model.addAttribute("tripsNewForm", tripsNewForm);
-			//モデルにエラーの設定
-			//			model.addAttribute("hasMessage", true);
-			//			model.addAttribute("message", "目的地を２カ所以上入力し、ルート検索を行い時間を設定してください。");
-//			if (result.getFieldErrors("arrivalTimes").size() > 0) {
-//				model.addAttribute("arrivalTimesErrors",
-//						result.getFieldErrors("arrivalTimes").get(0).getDefaultMessage());
-//			}
+
 			System.out.println("arrivalTimesErrorsのtest");
 			return "trips/new";
 		}
@@ -102,7 +96,7 @@ public class TripsController {
 			if (itineraryForm.getTagIds() == null) {
 				itineraryForm.setTagIds(new ArrayList<>());
 			}
-			//tagマスタ、公開設定マスタ、目的マスタをmodelに追加
+			//マスタ(tag,公開設定、目的)をmodelに追加
 			List<Tag> tags = tagRepository.findAllByOrderById();
 			model.addAttribute("tags", tags);
 			List<PublicOption> publicOptions = publicOptionRepository.findAllByOrderById();

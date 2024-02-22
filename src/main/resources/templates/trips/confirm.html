@@ -12,15 +12,16 @@
 			<h1 class="text-center">旅程確認</h1>
 			<div class="row">
 				<div class="col">
-					<h2 th:text="*{tripTitle}"></h2>
+<!--					<h2 th:text="*{tripTitle}"></h2>-->
 					<table class="table table-striped">
 						<thead>
 							<tr>
 								<th scope="col">日程</th>
-								<th scope="col">行動</th>
+<!--								<th scope="col">行動</th>-->
 								<th scope="col">時刻</th>
 								<td> </td>
 								<td> </td>
+								<th scope="col">行動</th>
 								<th scope="col">内容</th>
 							</tr>
 						</thead>
@@ -31,10 +32,11 @@
 								<th:block th:if="${#object.rowSequences[i] % 2 == 0}">
 									<tr>
 										<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-										<td th:text="${#object.purposeStrings[i]}"></td>
+<!--										<td th:text="${#object.purposeStrings[i]}"></td>-->
 										<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">9:10</td>
 										<td>～</td>
 										<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
+										<td th:text="${#object.purposeStrings[i]}"></td>
 										<td><span
 												th:text="${#object.departureNames[i]} + '&nbsp;&rArr;&nbsp;' + ${#object.arrivalNames[i]}"></span><br>
 											<span th:utext="${#object.usedBrDescriptions[i]}"></span>
@@ -45,10 +47,11 @@
 								<th:block th:if="${#object.rowSequences[i] % 2 != 0}">
 									<tr>
 										<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-										<td th:text="${#object.purposeStrings[i]}"></td>
+<!--										<td th:text="${#object.purposeStrings[i]}"></td>-->
 										<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">9:10</td>
 										<td>～</td>
 										<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
+										<td th:text="${#object.purposeStrings[i]}"></td>
 										<td><span th:text="${#object.titles[i]}"></span><BR>
 											<span th:utext="${#object.usedBrDescriptions[i]}"></span>
 										</td>
@@ -60,6 +63,9 @@
 					</table>
 				</div>
 			</div><!-- row閉じ -->
+			<!-- 旅のタイトル -->
+			<h2 th:text="*{tripTitle}"></h2>
+			<!-- 投稿設定 -->
 			<div class="row mb-2">
 				<div class="col-auto">
 					<label for="publicOption" class="col-form-label">投稿設定</label>
