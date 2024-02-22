@@ -75,6 +75,8 @@ public class TripsController {
 			BindingResult result, ItineraryForm itineraryForm, Model model) {
 		System.out.println("旅程作成画面コントローラ開始");
 		// TripsNewFormのバリデーションエラー有
+		// placeNamesが３個以上格納されていればOK
+		// arrivalTimesに値が格納されていればOK
 		if (result.hasErrors()) {
 			//出発地の出発時間をLocalDateからLocalDateTimeに変換しtripsNewFormに格納
 			LocalDateTime enteredDepartTime = LocalDateTime.of(LocalDate.of(2020, 1, 1),
@@ -82,9 +84,13 @@ public class TripsController {
 			tripsNewForm.setDepartTimes(List.of(enteredDepartTime));
 			model.addAttribute("tripsNewForm", tripsNewForm);
 			//モデルにエラーの設定
-			model.addAttribute("hasMessage", true);
-			model.addAttribute("message", "目的地を２カ所以上入力し、ルート検索を行い時間を設定してください。");
-
+			//			model.addAttribute("hasMessage", true);
+			//			model.addAttribute("message", "目的地を２カ所以上入力し、ルート検索を行い時間を設定してください。");
+//			if (result.getFieldErrors("arrivalTimes").size() > 0) {
+//				model.addAttribute("arrivalTimesErrors",
+//						result.getFieldErrors("arrivalTimes").get(0).getDefaultMessage());
+//			}
+			System.out.println("arrivalTimesErrorsのtest");
 			return "trips/new";
 		}
 

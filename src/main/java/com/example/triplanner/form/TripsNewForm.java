@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import jakarta.validation.constraints.NotEmpty;
+import com.example.triplanner.validation.constraints.ArrivalTimesNotNull;
+import com.example.triplanner.validation.constraints.PlaceNamesLength;
+
 import lombok.Data;
 
 @Data
@@ -12,13 +14,14 @@ public class TripsNewForm {
 
 	private LocalTime enteredStartTimeValue;//tripsNewの出発時間の値保存用
 
+	@ArrivalTimesNotNull
 	private List<LocalDateTime> arrivalTimes;
 
 	private List<LocalDateTime> departTimes;
 
+	@PlaceNamesLength(min = 3)	//場所が3カ所以上入力されているか確認
 	private List<String> placeNames;
 
-	@NotEmpty
 	private List<Double> latitudes;
 
 	private List<Double> longitudes;
