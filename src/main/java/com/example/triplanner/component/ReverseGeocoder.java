@@ -11,7 +11,7 @@ import com.example.triplanner.entity.Prefecture;
 import com.example.triplanner.repository.PrefectureRepository;
 
 @Component
-public class ReverceGeocoder {
+public class ReverseGeocoder {
 
 	@Autowired
 	private PrefectureRepository prefectureRepository;
