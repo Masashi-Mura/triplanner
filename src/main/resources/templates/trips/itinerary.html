@@ -17,10 +17,11 @@
 							<thead>
 								<tr>
 									<th scope="col">日程</th>
-									<th scope="col">行動</th>
+									<!--									<th scope="col">行動</th>-->
 									<th scope="col">時刻</th>
 									<td></td>
 									<td></td>
+									<th scope="col">行動</th>
 									<th scope="col">内容</th>
 								</tr>
 							</thead>
@@ -32,13 +33,13 @@
 											<input type="hidden" name=rowSequences
 												th:value="${#object.rowSequences[i]}">
 											<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-											<td><select name="purposeIds" class="form-select">
-													<th:block th:each="purpose : ${purposes}">
-														<option th:value="${purpose.id}" th:text="${purpose.purpose}"
-															th:selected="${purpose.id == #object.purposeIds[i]}">
-														</option>
-													</th:block>
-												</select></td>
+											<!--											<td><select name="purposeIds" class="form-select">-->
+											<!--													<th:block th:each="purpose : ${purposes}">-->
+											<!--														<option th:value="${purpose.id}" th:text="${purpose.purpose}"-->
+											<!--															th:selected="${purpose.id == #object.purposeIds[i]}">-->
+											<!--														</option>-->
+											<!--													</th:block>-->
+											<!--												</select></td>-->
 											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">00:00
 											</td>
 											<input type="hidden" name="startTimes"
@@ -47,6 +48,13 @@
 											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">00:00</td>
 											<input type="hidden" name="endTimes"
 												th:value="${#object.endTimes[i]}"><!-- hidden -->
+											<td><select name="purposeIds" class="form-select">
+													<th:block th:each="purpose : ${purposes}">
+														<option th:value="${purpose.id}" th:text="${purpose.purpose}"
+															th:selected="${purpose.id == #object.purposeIds[i]}">
+														</option>
+													</th:block>
+												</select></td>
 											<input type="hidden" name="departurePrefectureIds"
 												th:value="${#object.departurePrefectureIds[i]}"><!-- hidden -->
 											<td><span
@@ -68,14 +76,14 @@
 											<input type="hidden" name=rowSequences
 												th:value="${#object.rowSequences[i]}">
 											<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-											<td><select name="purposeIds" class="form-select">
-														<th:block th:each="purpose : ${purposes}">
-															<option th:value="${purpose.id}"
-																th:text="${purpose.purpose}"
-																th:selected="${purpose.id == #object.purposeIds[i]}">
-															</option>
-														</th:block>
-												</select></td>
+											<!--											<td><select name="purposeIds" class="form-select">-->
+											<!--														<th:block th:each="purpose : ${purposes}">-->
+											<!--															<option th:value="${purpose.id}"-->
+											<!--																th:text="${purpose.purpose}"-->
+											<!--																th:selected="${purpose.id == #object.purposeIds[i]}">-->
+											<!--															</option>-->
+											<!--														</th:block>-->
+											<!--												</select></td>-->
 											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">00:00
 											</td>
 											<input type="hidden" name="startTimes"
@@ -84,10 +92,16 @@
 											<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">00:00</td>
 											<input type="hidden" name="endTimes"
 												th:value="${#object.endTimes[i]}"><!-- hidden -->
-
+											<td><select name="purposeIds" class="form-select">
+													<th:block th:each="purpose : ${purposes}">
+														<option th:value="${purpose.id}" th:text="${purpose.purpose}"
+															th:selected="${purpose.id == #object.purposeIds[i]}">
+														</option>
+													</th:block>
+												</select></td>
 											<td><input class="form-control" type="text" name="titles" placeholder="タイトル"
 													th:value="${#object.titles[i]}">
-													<div class="w-100"></div>
+												<div class="w-100"></div>
 												<textarea class="form-control" style="height: 100px" name="descriptions"
 													placeholder="内容" th:text="${#object.descriptions[i]}">内容</textarea>
 											</td>
@@ -104,6 +118,7 @@
 						</table>
 					</div>
 				</div> <!-- row閉じ ここまで旅程表-->
+				<!-- 旅のタイトル-->
 				<div class="row mb-3">
 					<div class="col-md-4">
 						<label for="tripTitle" class="form-label">旅のタイトル</label>
