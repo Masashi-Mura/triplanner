@@ -161,6 +161,8 @@
 							</div>
 							<!-- 次ページから戻る時の表示ここまで -->
 						</table>
+						<div th:if="${#fields.hasErrors('placeNames')}" th:errors="*{placeNames}"
+							th:errorclass="error-message"></div>
 						<div id="tableTips" class="form-text">
 							目的地欄右の<i class="bi bi-list"></i>をドラッグすると並び替えできます。<br>
 							目的地欄右の<i class="bi bi-x-square"></i>を押すと、目的地を削除できます。
@@ -174,7 +176,7 @@
 					</form>
 
 					<!--ルート検索ボタン-->
-					<div class="mb-4">
+					<div class="mb-4" th:object="${tripsNewForm}">
 						<div class="form-check form-switch">
 							<input class="form-check-input" type="checkbox" role="switch" id="permitHighways" checked>
 							<label class="form-check-label" for="permitHighways">有料道路を通る</label>
@@ -183,18 +185,18 @@
 							<input class="form-check-input" type="checkbox" role="switch" id="optimizeWaypoints">
 							<label class="form-check-label" for="optimizeWaypoints">目的地を最適なルートに並び替え</label>
 						</div>
-						<div th:if="${hasMessage}">
-							<div class="d-grid justify-content-md-start">
-								<span th:text="${message}" class="error-message"></span>
-							</div>
-						</div>
-
-						<!-- ここにエラー処理 -->
-						<!--						<p th:if="${#fields.hasErrors('arrivalTimes')}" th:errors="*{arrivalTimes}" th:errorclass="error-message">-->
+						<!--						<div th:if="${hasMessage}">-->
+						<!--							<div class="d-grid justify-content-md-start">-->
+						<!--								<span th:text="${message}" class="error-message"></span>-->
+						<!--							</div>-->
+						<!--						</div>-->
 						<div class="d-grid justify-content-md-start">
 							<button class="btn btn-outline-primary" type="button" id="routeSearch">ルート検索
 								<i class="bi bi-search"></i></button>
 						</div>
+						<!-- ここにエラー処理 -->
+						<div th:if="${#fields.hasErrors('arrivalTimes')}" th:errors="*{arrivalTimes}"
+							th:errorclass="error-message"></div>
 					</div>
 
 					<!--旅程作成ボタン-->
