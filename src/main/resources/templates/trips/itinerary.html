@@ -33,13 +33,6 @@
 											<input type="hidden" name=rowSequences
 												th:value="${#object.rowSequences[i]}">
 											<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-											<!--											<td><select name="purposeIds" class="form-select">-->
-											<!--													<th:block th:each="purpose : ${purposes}">-->
-											<!--														<option th:value="${purpose.id}" th:text="${purpose.purpose}"-->
-											<!--															th:selected="${purpose.id == #object.purposeIds[i]}">-->
-											<!--														</option>-->
-											<!--													</th:block>-->
-											<!--												</select></td>-->
 											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">00:00
 											</td>
 											<input type="hidden" name="startTimes"
@@ -76,14 +69,6 @@
 											<input type="hidden" name=rowSequences
 												th:value="${#object.rowSequences[i]}">
 											<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-											<!--											<td><select name="purposeIds" class="form-select">-->
-											<!--														<th:block th:each="purpose : ${purposes}">-->
-											<!--															<option th:value="${purpose.id}"-->
-											<!--																th:text="${purpose.purpose}"-->
-											<!--																th:selected="${purpose.id == #object.purposeIds[i]}">-->
-											<!--															</option>-->
-											<!--														</th:block>-->
-											<!--												</select></td>-->
 											<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">00:00
 											</td>
 											<input type="hidden" name="startTimes"
