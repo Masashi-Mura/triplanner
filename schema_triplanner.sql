@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS purposes_master CASCADE;
 DROP TABLE IF EXISTS public_options_master CASCADE;
 DROP TABLE IF EXISTS tags_master CASCADE;
 DROP TABLE IF EXISTS trips CASCADE;
-DROP TABLE IF EXISTS tag_maps CASCADE;
+DROP TABLE IF EXISTS tag_lists CASCADE;
 DROP TABLE IF EXISTS itineraries CASCADE;
 DROP TABLE IF EXISTS favorites CASCADE;
 
@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS users (
   user_id SERIAL NOT NULL,
   authority VARCHAR(255) NOT NULL,
   nickname VARCHAR(255) NOT NULL,
+  username VARCHAR(255) NOT NULL,
   login_password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL,
@@ -134,9 +135,9 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- usersテーブルテスト用データ
-INSERT INTO users (authority, nickname, login_password, created_at, updated_at) VALUES
-  ('test1@test.com','tester1','password',NOW(),NOW()),
-  ('test2@test.com','tester2','password',NOW(),NOW());
+INSERT INTO users (authority, nickname, username, login_password, created_at, updated_at) VALUES
+  ('test1@test.com','tester1','test1@example.com','password',NOW(),NOW()),
+  ('test2@test.com','tester2','test2@example.com','password',NOW(),NOW());
 
 CREATE TABLE IF NOT EXISTS trips (
   id SERIAL NOT NULL,
@@ -161,7 +162,7 @@ INSERT INTO trips (user_id, trip_title, total_trip_days, public_id, deleted, cre
   (2,'test3',1,2,false,NOW(),NOW()),
   (2,'test4',2,2,false,NOW(),NOW());
 
-CREATE TABLE IF NOT EXISTS tag_maps (
+CREATE TABLE IF NOT EXISTS tag_lists (
   id SERIAL NOT NULL,
   trip_id INTEGER NOT NULL,
   tag_id INTEGER NOT NULL,
@@ -170,11 +171,11 @@ CREATE TABLE IF NOT EXISTS tag_maps (
   PRIMARY KEY (id)
 );
 
-ALTER TABLE tag_maps ADD CONSTRAINT FK_tag_trip FOREIGN KEY (trip_id) REFERENCES trips (id);
-ALTER TABLE tag_maps ADD CONSTRAINT FK_tag_tag FOREIGN KEY (tag_id) REFERENCES tags_master (id);
+ALTER TABLE tag_lists ADD CONSTRAINT FK_tag_trip FOREIGN KEY (trip_id) REFERENCES trips (id);
+ALTER TABLE tag_lists ADD CONSTRAINT FK_tag_tag FOREIGN KEY (tag_id) REFERENCES tags_master (id);
 
--- tag_mapsテーブルテスト用データ
-INSERT INTO tag_maps (trip_id, tag_id, created_at, updated_at) VALUES
+-- tag_listsテーブルテスト用データ
+INSERT INTO tag_lists (trip_id, tag_id, created_at, updated_at) VALUES
   (1,1,NOW(),NOW()),
   (1,2,NOW(),NOW()),
 

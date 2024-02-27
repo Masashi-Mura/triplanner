@@ -17,16 +17,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.triplanner.component.ReverseGeocoder;
+import com.example.triplanner.entity.Itinerary;
 import com.example.triplanner.entity.Prefecture;
 import com.example.triplanner.entity.PublicOption;
 import com.example.triplanner.entity.Purpose;
 import com.example.triplanner.entity.Tag;
+import com.example.triplanner.entity.TagLists;
+import com.example.triplanner.entity.Trips;
 import com.example.triplanner.form.ItineraryForm;
 import com.example.triplanner.form.TripsNewForm;
+import com.example.triplanner.repository.ItinerariesRepository;
 import com.example.triplanner.repository.PrefectureRepository;
 import com.example.triplanner.repository.PublicOptionRepository;
 import com.example.triplanner.repository.PurposeRepository;
+import com.example.triplanner.repository.TagListsRepository;
 import com.example.triplanner.repository.TagRepository;
+import com.example.triplanner.repository.TripsRepository;
+import com.example.triplanner.repository.UsersRepository;
 
 @Controller
 @RequestMapping("/trips")
@@ -34,6 +41,18 @@ public class TripsController {
 
 	@Autowired
 	private TagRepository tagRepository;
+
+	@Autowired
+	private UsersRepository usersRepository;
+
+	@Autowired
+	private TripsRepository tripsRepository;
+
+	@Autowired
+	private TagListsRepository tagListsRepository;
+
+	@Autowired
+	private ItinerariesRepository itinerariesRepository;
 
 	@Autowired
 	private PrefectureRepository prefectureRepository;
@@ -280,6 +299,49 @@ public class TripsController {
 
 		model.addAttribute("itineraryForm", itineraryForm);
 		return "trips/confirm";
+	}
+
+	//旅程登録画面
+	@PostMapping("/post")
+	public String tripPost(ItineraryForm itineraryForm, Model model) {
+
+		//tripsをDB(tripsテーブル)に保存
+		Trips trip = new Trips();
+		//userIdを取得してtripに設定
+		//ここに、ログインアカウントのuserIdを取得するコード記載
+		trip.setUserId(1);
+		trip.setTripTitle(itineraryForm.getTripTitle());
+		trip.setTotalTripDays(itineraryForm.getEndTimes().get(itineraryForm.getEndTimes().size() - 1).getDayOfMonth());
+		trip.setPublicId(itineraryForm.getPublicId());
+		trip.setDeleted(false);
+		tripsRepository.save(trip);
+
+		//tagIdをDB(tag_listsテーブル)に保存
+		itineraryForm.getTagIds().forEach(tagId -> {
+			TagLists tagList = new TagLists();
+			tagList.setTagId(tagId);
+			tagList.setTrip(trip);
+			tagListsRepository.save(tagList);
+		});
+
+		//itineraryをDB(itinerariesテーブル)に保存
+		int rowNumber = itineraryForm.getRowSequences().size();
+		for (int i = 0; i < rowNumber; i++) {
+			Itinerary itinerary = new Itinerary();
+			itinerary.setTrip(trip);
+			itinerary.setRowSequence(itineraryForm.getRowSequences().get(i));
+			itinerary.setPurposeId(itineraryForm.getPurposeIds().get(i));
+			itinerary.setStartTime(itineraryForm.getStartTimes().get(i));
+			itinerary.setEndTime(itineraryForm.getEndTimes().get(i));
+			itinerary.setDepartureName(itineraryForm.getDepartureNames().get(i));
+			itinerary.setDeparturePrefectureId(itineraryForm.getDeparturePrefectureIds().get(i));
+			itinerary.setArrivalName(itineraryForm.getArrivalNames().get(i));
+			itinerary.setTitle(itineraryForm.getTitles().get(i));
+			itinerary.setDescription(itineraryForm.getDescriptions().get(i));
+			itinerariesRepository.save(itinerary);
+		}
+		
+		return "redirect:/trips/index";
 	}
 
 }

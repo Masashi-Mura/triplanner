@@ -32,7 +32,6 @@
 								<th:block th:if="${#object.rowSequences[i] % 2 == 0}">
 									<tr>
 										<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-<!--										<td th:text="${#object.purposeStrings[i]}"></td>-->
 										<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">9:10</td>
 										<td>～</td>
 										<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
@@ -47,7 +46,6 @@
 								<th:block th:if="${#object.rowSequences[i] % 2 != 0}">
 									<tr>
 										<td th:text="${#temporals.day(#object.startTimes[i])}"></td>
-<!--										<td th:text="${#object.purposeStrings[i]}"></td>-->
 										<td th:text="${#temporals.format(#object.startTimes[i], 'HH:mm')}">9:10</td>
 										<td>～</td>
 										<td th:text="${#temporals.format(#object.endTimes[i], 'HH:mm')}">9:45</td>
@@ -83,7 +81,7 @@
 			</div><!-- row閉じ -->
 			<div class="row mb-2">
 				<div class="col-auto">
-					<button type="submit" class="btn btn-primary" form="submit" formaction="">旅程を登録する</button>
+					<button type="submit" class="btn btn-primary" form="submit" formaction="/trips/post">旅程を登録する</button>
 				</div>
 			</div><!-- row閉じ -->
 			<div class="row">
