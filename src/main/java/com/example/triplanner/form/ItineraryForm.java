@@ -3,6 +3,8 @@ package com.example.triplanner.form;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.triplanner.validation.constraints.NotEmptyAtEven;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +12,7 @@ import lombok.Data;
 
 @Data
 public class ItineraryForm {
-
+	//以下itinerariesテーブル保存時使用
 	private List<Integer> rowSequences;
 
 	@Valid
@@ -26,11 +28,12 @@ public class ItineraryForm {
 
 	private List<String> arrivalNames;
 
+	@NotEmptyAtEven //0行始まり
 	private List<String> titles;//itineraryでユーザ入力
 
 	private List<String> descriptions;//itineraryでユーザ入力
 
-	//以下、tripsテーブルで使用
+	//以下、tripsテーブル保存時使用
 	@NotEmpty(message = "旅のタイトルを入力してください")
 	private String tripTitle;//itineraryでユーザ入力
 
