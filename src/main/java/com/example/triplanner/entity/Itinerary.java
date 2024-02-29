@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -25,9 +23,8 @@ public class Itinerary extends AbstractEntity{
 	private Integer id;
 	
 	/** 旅id */
-	@ManyToOne
-	@JoinColumn(name = "trip_id")
-	private Trips trip;
+	@Column(name = "trip_id")
+	private Integer tripId;
 	
 	/** 行番号 */
 	@Column(name = "row_sequence")
@@ -65,5 +62,4 @@ public class Itinerary extends AbstractEntity{
 	@Column(name = "description", length = 255)
 	private String description;
 	
-	//FKの設定を書く
 }

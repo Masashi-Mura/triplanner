@@ -5,7 +5,7 @@
 <body>
 	<nav class="navbar navbar-expand-lg fixed-top bg-light" layout:fragment="nav">
 		<div class="container">
-			<a class="navbar-brand" href="#">Triplanner</a>
+			<a class="navbar-brand" th:href="@{/trips/index}">Triplanner</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
 				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -13,7 +13,9 @@
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav ms-auto">
 					<li class="nav-item">
-						<img src="/images/icons/new.png" th:src="@{/images/icons/new.png}">
+						<a class="nav-link" th:href="@{/trips/new}">
+							<img src="/images/icons/new.png" th:src="@{/images/icons/new.png}">
+						</a>
 					</li>
 					<li class="nav-item">
 						<img src="/images/icons/heart.png" th:src="@{/images/icons/heart.png}">
@@ -28,11 +30,6 @@
 			</div>
 		</div>
 	</nav>
-<!--	<div id="messages" layout:fragment="messages" th:if="!${#lists.isEmpty(#fields.detailedErrors())}">-->
-<!--		<ul>-->
-<!--			<li th:each="error : ${#fields.detailedErrors()}" class="error-message" th:text="${error.message}" />-->
-<!--		</ul>-->
-<!--	</div>-->
 </body>
 
 </html>
