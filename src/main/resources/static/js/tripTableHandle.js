@@ -10,9 +10,6 @@ let beforeSortableWaypoints;
 let afterSortableWaypoints;
 let waypointPlaceNames;
 
-// 次行はdayjsのdurationを使う場合に使用するコード
-// dayjs.extend(dayjs_plugin_duration);
-
 // 時間の単位は(分)を基準で計算する
 function changeTimes() {
 	console.log('changeTimes()実行');
@@ -44,7 +41,6 @@ function changeTimes() {
 	let startTimeValue = $('.entered-start-time').val();//test
 	departTimes = [];
 	departTimes[0] = baseTime.add(startTimeValue.split(':')[0], 'hour').add(startTimeValue.split(':')[1], 'minute');
-	console.log('departTimes[0]', departTimes[0]);//デバッグ用
 
 	// 滞在時間HH:MMを取得
 	stayTimeValues = [];
@@ -57,7 +53,6 @@ function changeTimes() {
 	for (let i = 0; i < durationSecondsValues.length; i++) {
 		durationTimeValues.push(secondsToHHMM(durationSecondsValues[i]));
 	}
-	console.log('durationTimeValues', durationTimeValues);//デバッグ用)
 
 	// 到着時間、出発時間の全値を計算し格納
 	// 到着時間１＝出発時間１＋移動時間１
@@ -67,15 +62,12 @@ function changeTimes() {
 	for (let i = 0; i < $('.arrival-times').length; i++) {
 		//到着時間＝出発時間＋移動時間
 		arrivalTimes.push(departTimes[i].add(durationTimeValues[i].split(':')[0], 'h').add(durationTimeValues[i].split(':')[1], 'm'));
-		console.log('arrivalTimes[' + i + ']', arrivalTimes[i]);//デバッグ用
 		if (i === $('.arrival-times').length - 1) {
 			break;
 		}
 		//出発時間＝到着時間＋滞在時間
 		departTimes.push(arrivalTimes[i].add(stayTimeValues[i].split(':')[0], 'h').add(stayTimeValues[i].split(':')[1], 'm'));
-		console.log('departTimes[' + (i + 1) + ']', departTimes[i + 1]);//デバッグ用
 	}
-	console.log('到着時間、出発時間の計算完了');//デバッグ用
 
 	// 結果を表に出力
 	let outputedDay = "1";
@@ -149,9 +141,6 @@ async function addPlaceNameField(placeName) {
 	tableHtml += '<input type="hidden" name="days"><!-- hidden -->';
 	tableHtml += '<td class="arrival-times"></td>';
 	tableHtml += '<input type="hidden" name="arrivalTimes"><!-- hidden -->';
-	tableHtml += '<td class="depart-times"></td>';
-	tableHtml += '<input type="hidden" name="departTimes"><!-- hidden -->';
-	tableHtml += '<td class="duration-times"></td>';
 	tableHtml += '<td class="pinName"></td>';
 	if (typeof placeName === 'string') {
 		tableHtml += '<td><input type="text" class="waypoint placeName" name="placeNames" placeholder="目的地" value="' + placeName + '"></td>';
@@ -161,6 +150,9 @@ async function addPlaceNameField(placeName) {
 	tableHtml += '<input type="hidden" name="latitudes"><!-- hidden -->';
 	tableHtml += '<input type="hidden" name="longitudes"><!-- hidden -->';
 	tableHtml += '<td><input type="time" value="01:00" class="entered-stay-times changeTime display-none"></td>';
+	tableHtml += '<td class="depart-times"></td>';
+	tableHtml += '<input type="hidden" name="departTimes"><!-- hidden -->';
+	tableHtml += '<td class="duration-times"></td>';
 	tableHtml += '<td><button class="handle btn btn-sm" type="button"><i class="bi bi-list"></i></button></td>';
 	tableHtml += '<td><button class="deletePlaceNameField btn btn-sm" type="button"><i class="bi bi-x-square"></i></button></td>';
 	tableHtml += '</tr>';
