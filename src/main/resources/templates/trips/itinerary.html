@@ -100,6 +100,9 @@
 								</th:block>
 							</tbody>
 						</table>
+						<p th:if="${#fields.hasErrors('titles')}" th:errors="*{titles}"
+							th:errorclass="error-message">
+						</p>
 					</div>
 				</div> <!-- row閉じ ここまで旅程表-->
 				<!-- 旅のタイトル-->
