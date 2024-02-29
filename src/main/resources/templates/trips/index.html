@@ -43,8 +43,8 @@
 						<ul class="dropdown-menu overflow-auto" style="height: 200px">
 							<th:block th:each="prefecture : ${prefectures}">
 								<label class="dropdown-item">
-									<input class="form-check-input" type="checkbox" name="waypoints" th:value="${prefecture.id}"
-										th:text="${prefecture.name}" />
+									<input class="form-check-input" type="checkbox" name="waypoints"
+										th:value="${prefecture.id}" th:text="${prefecture.name}" />
 								</label>
 							</th:block>
 						</ul>
@@ -84,51 +84,27 @@
 		</div>
 		<div class="container">
 			<div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4">
-				<div class="col">
+				<div class="col" th:each="trip, tripStat : ${tripsList}">
 					<div class="card h-100">
 						<iframe class="card-img-top" width="600" height="400" style="border:0" loading="lazy"
 							allowfullscreen referrerpolicy="no-referrer-when-downgrade"
-							th:src="@{|https://www.google.com/maps/embed/v1/place?key=${@environment.getProperty('googlemap.key')}&q=Space+Needle,Seattle+WA|}">
+							th:src="'https://www.google.com/maps/embed/v1/directions?key=' + ${@environment.getProperty('googlemap.key')} + ${placeNamesQueries[tripStat.index]}">
 						</iframe>
 						<div class="card-body">
-							<h5 class="card-title">Card title</h5>
-							<p class="card-text">This is a longer card with supporting text below as a natural lead-in
-								to
-								additional content. This content is a little bit longer.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<iframe class="card-img-top" width="600" height="400" style="border:0" loading="lazy"
-							allowfullscreen referrerpolicy="no-referrer-when-downgrade"
-							th:src="'https://www.google.com/maps/embed/v1/directions?key=' + ${@environment.getProperty('googlemap.key')} + '&origin=東京駅&destination=大阪駅&waypoints=神奈川駅|名古屋駅'">
-						</iframe>
-						<div class="card-body">
-							<h5 class="card-title">Card title</h5>
-							<p class="card-text">This is a short card.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="..." class="card-img-top" alt="...">
-						<div class="card-body">
-							<h5 class="card-title">Card title</h5>
-							<p class="card-text">This is a longer card with supporting text below as a natural lead-in
-								to
-								additional content.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col">
-					<div class="card h-100">
-						<img src="..." class="card-img-top" alt="...">
-						<div class="card-body">
-							<h5 class="card-title">Card title</h5>
-							<p class="card-text">This is a longer card with supporting text below as a natural lead-in
-								to
-								additional content. This content is a little bit longer.</p>
+							<h5 class="card-title" th:text="${trip.tripTitle}"></h5>
+							<div class="card-text">
+								<div th:each="itineraryRow, itineraryStat: ${itineraries[tripStat.index]}">
+									<div th:if="${itineraryStat.first}">
+										<div th:text="${'・' + itineraryRow.departureName}"><br></div>
+									</div>
+									<div th:if="${itineraryStat.odd}">
+										<div th:text="${'・' + itineraryRow.arrivalName}"><br></div>
+									</div>
+									<div th:if="${itineraryStat.even}">
+										<div th:text="${'&emsp;&nbsp;' + itineraryRow.title}"><br></div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

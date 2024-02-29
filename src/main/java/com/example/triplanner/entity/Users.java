@@ -1,14 +1,10 @@
 package com.example.triplanner.entity;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -44,9 +40,4 @@ public class Users extends AbstractEntity{
 	@Column(name = "login_password", length = 255)
 	private String loginPassword;
 	
-	
-	//FKの設定を書く
-	@OneToMany
-	@JoinColumn(name = "user_id")
-	private List<Trips> trips;
 }

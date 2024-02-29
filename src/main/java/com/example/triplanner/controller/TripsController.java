@@ -69,6 +69,38 @@ public class TripsController {
 	//旅一覧画面
 	@GetMapping("/index")
 	public String index(Model model) {
+
+		//表示するtrip一覧を取得
+		List<Trips> tripsList = tripsRepository.findAllByOrderById();
+		model.addAttribute("tripsList", tripsList);
+		
+		//取得したtrip一覧のidに紐づく旅程を取得
+		List<List<Itinerary>> itineraries = new ArrayList<>();
+		tripsList.forEach(trip -> {
+			List<Itinerary> oneTripItinerary = itinerariesRepository.findByTripIdOrderById(trip.getId());
+			itineraries.add(oneTripItinerary);
+		});
+		model.addAttribute("itineraries", itineraries);
+		
+		//取得した旅程の場所名一覧を取得（indexのgoogleMapで経路指定に使用する形に変換)
+		//(使用する形の例：&origin=東京駅&destination=大阪駅&waypoints=神奈川駅|名古屋駅)
+		List<String> placeNamesQueries = new ArrayList<>();
+		itineraries.forEach(itinerary -> {
+			StringBuilder placeNamesQuery = new StringBuilder("&origin");
+			placeNamesQuery.append("=" + itinerary.getFirst().getDepartureName());
+			placeNamesQuery.append("&destination=" + itinerary.getLast().getArrivalName());
+			placeNamesQuery.append("&waypoints=");
+			//経由地（出発地と最終目的地を除いた場所）を連結
+			placeNamesQuery.append(itinerary.get(2).getDepartureName());
+			for (int i = 4; i < itinerary.size(); i++) {
+				if (i % 2 == 0) {
+					placeNamesQuery.append("|" + itinerary.get(i).getDepartureName());
+				}
+			}
+			placeNamesQueries.add(placeNamesQuery.toString());
+		});
+		model.addAttribute("placeNamesQueries", placeNamesQueries);
+
 		List<Tag> tags = tagRepository.findAllByOrderById();
 		model.addAttribute("tags", tags);
 
@@ -320,7 +352,7 @@ public class TripsController {
 		itineraryForm.getTagIds().forEach(tagId -> {
 			TagLists tagList = new TagLists();
 			tagList.setTagId(tagId);
-			tagList.setTrip(trip);
+			tagList.setTripId(trip.getId());
 			tagListsRepository.save(tagList);
 		});
 
@@ -328,7 +360,7 @@ public class TripsController {
 		int rowNumber = itineraryForm.getRowSequences().size();
 		for (int i = 0; i < rowNumber; i++) {
 			Itinerary itinerary = new Itinerary();
-			itinerary.setTrip(trip);
+			itinerary.setTripId(trip.getId());
 			itinerary.setRowSequence(itineraryForm.getRowSequences().get(i));
 			itinerary.setPurposeId(itineraryForm.getPurposeIds().get(i));
 			itinerary.setStartTime(itineraryForm.getStartTimes().get(i));
@@ -340,7 +372,7 @@ public class TripsController {
 			itinerary.setDescription(itineraryForm.getDescriptions().get(i));
 			itinerariesRepository.save(itinerary);
 		}
-		
+
 		return "redirect:/trips/index";
 	}
 

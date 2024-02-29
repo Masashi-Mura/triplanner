@@ -157,10 +157,10 @@ ALTER TABLE trips ADD CONSTRAINT FK_trip_user FOREIGN KEY (user_id) REFERENCES u
 
 -- tripテーブルテスト用データ
 INSERT INTO trips (user_id, trip_title, total_trip_days, public_id, deleted, created_at, updated_at) VALUES
-  (1,'test1',1,1,false,NOW(),NOW()),
-  (1,'test2',2,2,false,NOW(),NOW()),
-  (2,'test3',1,2,false,NOW(),NOW()),
-  (2,'test4',2,2,false,NOW(),NOW());
+  (1,'テスト１',1,1,false,NOW(),NOW()),
+  (1,'テスト２',2,2,false,NOW(),NOW()),
+  (2,'テスト３',1,2,false,NOW(),NOW()),
+  (2,'テスト４',2,2,false,NOW(),NOW());
 
 CREATE TABLE IF NOT EXISTS tag_lists (
   id SERIAL NOT NULL,
@@ -212,27 +212,27 @@ ALTER TABLE itineraries ADD CONSTRAINT FK_itinerary_departure FOREIGN KEY (depar
 -- itinerariesテーブル用テストデータ
 INSERT INTO itineraries (trip_id, row_sequence, purpose_id, start_time, end_time, departure_name, departure_prefecture_id, 
                     arrival_name, title, description, created_at, updated_at) VALUES
-  (1,1,1,NOW(),NOW(),'departurePlace1',1,'arrivalPlace1',NULL,NULL,NOW(),NOW()),
+  (1,1,1,NOW(),NOW(),'大阪駅',27,'あべのハルカス',NULL,NULL,NOW(),NOW()),
   (1,2,2,NOW(),NOW(),NULL,NULL,NULL,'title1','description1',NOW(),NOW()),
-  (1,3,1,NOW(),NOW(),'departurePlace1-2',2,'arrivalPlace1-2',NULL,NULL,NOW(),NOW()),
+  (1,3,1,NOW(),NOW(),'あべのハルカス',27,'大阪駅',NULL,NULL,NOW(),NOW()),
 
-  (2,1,1,NOW(),NOW(),'departurePlace2',2,'arrivalPlace2',NULL,NULL,NOW(),NOW()),
+  (2,1,1,NOW(),NOW(),'大阪駅',27,'通天閣',NULL,NULL,NOW(),NOW()),
   (2,2,2,NOW(),NOW(),NULL,NULL,NULL,'title2','description2',NOW(),NOW()),
-  (2,3,1,NOW(),NOW(),'departurePlace2-2',3,'arrivalPlace2-2',NULL,NULL,NOW(),NOW()),
+  (2,3,1,NOW(),NOW(),'通天閣',27,'大阪駅',NULL,NULL,NOW(),NOW()),
 
-  (3,1,1,NOW(),NOW(),'departurePlace3',3,'arrivalPlace3',NULL,NULL,NOW(),NOW()),
+  (3,1,1,NOW(),NOW(),'大阪駅',27,'姫路駅',NULL,NULL,NOW(),NOW()),
   (3,2,2,NOW(),NOW(),NULL,NULL,NULL,'title3','description3',NOW(),NOW()),
-  (3,3,1,NOW(),NOW(),'departurePlace3-2',3,'arrivalPlace3-2',NULL,NULL,NOW(),NOW()),
+  (3,3,1,NOW(),NOW(),'姫路駅',28,'姫路城',NULL,NULL,NOW(),NOW()),
   (3,4,2,NOW(),NOW(),NULL,NULL,NULL,'title3','description3',NOW(),NOW()),
-  (3,5,1,NOW(),NOW(),'departurePlace3-3',3,'arrivalPlace3-3',NULL,NULL,NOW(),NOW()),
+  (3,5,1,NOW(),NOW(),'姫路城',28,'大阪駅',NULL,NULL,NOW(),NOW()),
 
-  (4,1,1,NOW(),NOW(),'departurePlace4-1',3,'arrivalPlace4-1',NULL,NULL,NOW(),NOW()),
+  (4,1,1,NOW(),NOW(),'姫路駅',28,'大阪城',NULL,NULL,NOW(),NOW()),
   (4,2,2,NOW(),NOW(),NULL,NULL,NULL,'title4-1','description4-1',NOW(),NOW()),
-  (4,3,1,NOW(),NOW(),'departurePlace4-2',3,'arrivalPlace4-2',NULL,NULL,NOW(),NOW()),
+  (4,3,1,NOW(),NOW(),'大阪城',27,'通天閣',NULL,NULL,NOW(),NOW()),
   (4,4,2,NOW(),NOW(),NULL,NULL,NULL,'title4-2','description4-2',NOW(),NOW()),
-  (4,5,1,NOW(),NOW(),'departurePlace4-3',2,'arrivalPlace4-3',NULL,NULL,NOW(),NOW()),
+  (4,5,1,NOW(),NOW(),'通天閣',27,'あべのハルカス',NULL,NULL,NOW(),NOW()),
   (4,6,2,NOW(),NOW(),NULL,NULL,NULL,'title4-3','description4-3',NOW(),NOW()),
-  (4,7,1,NOW(),NOW(),'departurePlace4-4',1,'arrivalPlace4-4',NULL,NULL,NOW(),NOW());
+  (4,7,1,NOW(),NOW(),'あべのハルカス',27,'姫路駅',NULL,NULL,NOW(),NOW());
 
 CREATE TABLE IF NOT EXISTS favorites (
   id SERIAL NOT NULL,

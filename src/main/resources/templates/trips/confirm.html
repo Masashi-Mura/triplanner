@@ -12,12 +12,10 @@
 			<h1 class="text-center">旅程確認</h1>
 			<div class="row">
 				<div class="col">
-<!--					<h2 th:text="*{tripTitle}"></h2>-->
 					<table class="table table-striped">
 						<thead>
 							<tr>
 								<th scope="col">日程</th>
-<!--								<th scope="col">行動</th>-->
 								<th scope="col">時刻</th>
 								<td> </td>
 								<td> </td>
@@ -111,7 +109,6 @@
 				<input type="hidden" name="tripTitle" th:value="*{tripTitle}">
 				<input type="hidden" name="publicId" th:value="*{publicId}">
 				<input type="hidden" th:each="tagId : ${#object.tagIds}" name="tagIds" th:value="${tagId}">
-<!--				<input type="hidden" name="fromConfirm" th:value="true">-->
 			</form>
 		</div>
 	</div>
