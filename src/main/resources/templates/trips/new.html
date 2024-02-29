@@ -13,10 +13,6 @@
 				<h1>旅作成</h1>
 				<div class="col-md-7  bg-body-tertiary scrollable">
 					<div class="mb-3">
-						<!-- 出発地検索ボタン -->
-						<!--					<br />-->
-						<!--					<b>出発地の名称を入力してボタンを押してください</b>-->
-						<!--					<br />-->
 						<label for="searchStartPlaceName" class="form-label"><i
 								class="bi bi-1-square"></i>出発地の名称を入力してボタンを押してください</label>
 						<input type="text" class="place-search form-control mb-2" id="searchStartPlaceName">
@@ -55,26 +51,26 @@
 							<tr>
 								<th>日程</th>
 								<th>到着時間</th>
-								<th>出発時間</th>
-								<th>移動時間</th>
 								<th>ピン</th>
 								<th>場所</th>
 								<th>滞在時間</th>
+								<th>出発時間</th>
+								<th>移動時間</th>
 							</tr>
 							<!-- 初回表示 -->
 							<div th:if="${#lists.isEmpty(#object.placeNames)}">
 								<td>1日目</td>
 								<td>-</td>
-								<td><input type="time" name="enteredStartTimeValue" value="08:00"
-										class="entered-start-time changeTime"></td>
-								<input type="hidden" name="departTimes"><!-- hidden -->
-								<td class="duration-times"></td>
 								<td class="pinName"></td>
 								<td><input type="text" name="placeNames" class="placeName" placeholder="旅の出発地" required>
 								</td>
 								<input type="hidden" name="latitudes"><!-- hidden -->
 								<input type="hidden" name="longitudes"><!-- hidden -->
 								<td>-</td>
+								<td><input type="time" name="enteredStartTimeValue" value="08:00"
+										class="entered-start-time changeTime"></td>
+								<input type="hidden" name="departTimes"><!-- hidden -->
+								<td class="duration-times"></td>
 								</tr>
 								<tbody id="sortableRow">
 									<tr>
@@ -82,9 +78,6 @@
 										<input type="hidden" name="days"><!-- hidden -->
 										<td class="arrival-times"></td>
 										<input type="hidden" name="arrivalTimes"><!-- hidden -->
-										<td class="depart-times"></td>
-										<input type="hidden" name="departTimes"><!-- hidden -->
-										<td class="duration-times"></td>
 										<td class="pinName"></td>
 										<td><input type="text" name="placeNames" class="waypoint placeName"
 												placeholder="目的地" required>
@@ -94,6 +87,9 @@
 										<td><input type="time" value="01:00" name="stayTimes"
 												class="entered-stay-times changeTime display-none">
 										</td>
+										<td class="depart-times"></td>
+										<input type="hidden" name="departTimes"><!-- hidden -->
+										<td class="duration-times"></td>
 										<td><button class="handle btn btn-sm" type="button">
 												<i class="bi bi-list"></i></button>
 										</td>
@@ -108,17 +104,17 @@
 								<tr>
 									<td>1日目</td>
 									<td>-</td>
-									<td><input type="time" name="enteredStartTimeValue" value="08:00"
-											th:value="${#temporals.format(#object.departTimes[0], 'HH:mm')}"
-											class="entered-start-time changeTime"></td>
-									<input type="hidden" name="departTimes"><!-- hidden -->
-									<td class="duration-times"></td>
 									<td class="pinName"></td>
 									<td><input type="text" name="placeNames" class="placeName" placeholder="旅の出発地"
 											th:value="${#object.placeNames[0]}" required></td>
 									<input type="hidden" name="latitudes"><!-- hidden -->
 									<input type="hidden" name="longitudes"><!-- hidden -->
 									<td>-</td>
+									<td><input type="time" name="enteredStartTimeValue" value="08:00"
+											th:value="${#temporals.format(#object.departTimes[0], 'HH:mm')}"
+											class="entered-start-time changeTime"></td>
+									<input type="hidden" name="departTimes"><!-- hidden -->
+									<td class="duration-times"></td>
 								</tr>
 								<tbody id="sortableRow">
 									<!-- ここからthymeleafで目的地作成 -->
@@ -129,9 +125,6 @@
 												<input type="hidden" name="days"><!-- hidden -->
 												<td class="arrival-times"></td>
 												<input type="hidden" name="arrivalTimes"><!-- hidden -->
-												<td class="depart-times"></td>
-												<input type="hidden" name="departTimes"><!-- hidden -->
-												<td class="duration-times"></td>
 												<td class="pinName"></td>
 												<td><input type="text" name="placeNames" class="waypoint placeName"
 														placeholder="目的地" th:value="${#object.placeNames[i + 1]}"
@@ -148,6 +141,9 @@
 													<input type="time" value="01:00" name="stayTimes"
 														class="entered-stay-times changeTime display-none">
 												</td>
+												<td class="depart-times"></td>
+												<input type="hidden" name="departTimes"><!-- hidden -->
+												<td class="duration-times"></td>
 												<td><button class="handle btn btn-sm" type="button">
 														<i class="bi bi-list"></i></button>
 												</td>
@@ -185,11 +181,6 @@
 							<input class="form-check-input" type="checkbox" role="switch" id="optimizeWaypoints">
 							<label class="form-check-label" for="optimizeWaypoints">目的地を最適なルートに並び替え</label>
 						</div>
-						<!--						<div th:if="${hasMessage}">-->
-						<!--							<div class="d-grid justify-content-md-start">-->
-						<!--								<span th:text="${message}" class="error-message"></span>-->
-						<!--							</div>-->
-						<!--						</div>-->
 						<div class="d-grid justify-content-md-start">
 							<button class="btn btn-outline-primary" type="button" id="routeSearch">ルート検索
 								<i class="bi bi-search"></i></button>
