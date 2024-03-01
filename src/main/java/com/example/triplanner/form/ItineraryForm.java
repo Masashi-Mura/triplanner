@@ -12,7 +12,8 @@ import lombok.Data;
 
 @Data
 public class ItineraryForm {
-	//以下itinerariesテーブル保存時使用
+	//以下、旅程作成Formデータ（itinerariesテーブル保存分）
+	//旅作成Formデータから作成したデータ。旅作成戻り時にデータの保持不要
 	private List<Integer> rowSequences;
 
 	@Valid
@@ -33,7 +34,8 @@ public class ItineraryForm {
 
 	private List<String> descriptions;//itineraryでユーザ入力
 
-	//以下、tripsテーブル保存時使用
+	//以下、旅程作成Formデータ（tripsテーブル保存分）
+	//旅程作成のユーザ入力データ。旅作成戻り時にデータの保持必要
 	@NotEmpty(message = "旅のタイトルを入力してください")
 	private String tripTitle;//itineraryでユーザ入力
 
@@ -43,7 +45,8 @@ public class ItineraryForm {
 	@NotNull(message = "タグを１つ以上選択してください")
 	private List<Integer> tagIds;//itineraryでユーザ入力
 
-	//以下、確認画面出力用
+	
+	//以下、確認画面出力用（旅程作成→旅程確認のコントローラでデータ作成）
 	private List<String> purposeStrings;
 
 	private String publicString;
