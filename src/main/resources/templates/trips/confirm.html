@@ -109,6 +109,8 @@
 				<input type="hidden" name="tripTitle" th:value="*{tripTitle}">
 				<input type="hidden" name="publicId" th:value="*{publicId}">
 				<input type="hidden" th:each="tagId : ${#object.tagIds}" name="tagIds" th:value="${tagId}">
+				
+				<input type="hidden" name="fromConfirm" th:value="true">
 			</form>
 		</div>
 	</div>

@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 public class TripsNewForm {
 
+	//以下、tripsNewページで取得
 	private LocalTime enteredStartTimeValue;//tripsNewの出発時間の値保存用
 
 	@ArrivalTimesNotNull
@@ -29,6 +30,7 @@ public class TripsNewForm {
 	//tripsNew画面のみ使用。itineraryから戻るときはコントローラで計算して格納
 	private List<LocalTime> stayTimes;
 
+	
 	//以下、itineraryページで取得
 	private String tripTitle;
 

@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.triplanner.component.ReverseGeocoder;
 import com.example.triplanner.entity.Itinerary;
@@ -73,7 +74,7 @@ public class TripsController {
 		//表示するtrip一覧を取得
 		List<Trips> tripsList = tripsRepository.findAllByOrderById();
 		model.addAttribute("tripsList", tripsList);
-		
+
 		//取得したtrip一覧のidに紐づく旅程を取得
 		List<List<Itinerary>> itineraries = new ArrayList<>();
 		tripsList.forEach(trip -> {
@@ -81,7 +82,7 @@ public class TripsController {
 			itineraries.add(oneTripItinerary);
 		});
 		model.addAttribute("itineraries", itineraries);
-		
+
 		//取得した旅程の場所名一覧を取得（indexのgoogleMapで経路指定に使用する形に変換)
 		//(使用する形の例：&origin=東京駅&destination=大阪駅&waypoints=神奈川駅|名古屋駅)
 		List<String> placeNamesQueries = new ArrayList<>();
@@ -120,30 +121,76 @@ public class TripsController {
 		return "trips/new";
 	}
 
+	//旅作成画面（旅程作成画面から戻る）
+	@PostMapping("/new")
+	public String newTripGoBack(ItineraryForm itineraryForm, Model model) {
+		System.out.println("@PostMapping(\"/new\") スタート");
+		System.out.println("ItineraryFromは：" + itineraryForm);
+		//出発時間、滞在時間、場所をitineraryFormからtripsNewFormに変換
+		TripsNewForm tripsNewForm = new TripsNewForm();
+		//滞在時間、場所を変換
+		List<LocalTime> stayTimes = new ArrayList<>();
+		List<String> placeNames = new ArrayList<>();
+		int rowSequencesLength = itineraryForm.getRowSequences().size();
+		for (int i = 0; i < rowSequencesLength; i++) {
+			if (i % 2 == 0) { //偶数行(0スタート)
+				placeNames.add(itineraryForm.getDepartureNames().get(i));
+			}
+			if (i == rowSequencesLength - 1) { //最終行のみ到着地を場所に追加
+				placeNames.add(itineraryForm.getArrivalNames().get(i));
+			}
+			if (i % 2 == 1) {
+				Duration stayTimeDuration = Duration.between(itineraryForm.getStartTimes().get(i),
+						itineraryForm.getEndTimes().get(i));
+				stayTimes.add(LocalTime.ofNanoOfDay(stayTimeDuration.toNanos()));
+			}
+		}
+		tripsNewForm.setStayTimes(stayTimes);
+		tripsNewForm.setPlaceNames(placeNames);
+		tripsNewForm.setDepartTimes(itineraryForm.getStartTimes());
+		tripsNewForm.setTripTitle(itineraryForm.getTripTitle());
+		tripsNewForm.setPublicId(itineraryForm.getPublicId());
+		tripsNewForm.setTagIds(itineraryForm.getTagIds());
+		model.addAttribute("tripsNewForm", tripsNewForm);
+
+		System.out.println("@PostMapping(\"/new\") エンド");
+		System.out.println("TripsNewFormは：" + tripsNewForm);
+
+		return "trips/new";
+	}
+
 	//旅程作成画面
 	@PostMapping("/itinerary")
 	public String newItinerary(@Validated TripsNewForm tripsNewForm,
-			BindingResult result, ItineraryForm itineraryForm, Model model) {
-		System.out.println("旅程作成画面コントローラ開始");
+			BindingResult result, ItineraryForm itineraryForm,
+			@RequestParam(value = "fromConfirm", defaultValue = "false") Boolean fromConfirm, Model model) {
+		System.out.println();
+		System.out.println("@PostMapping(\"/itinerary\") スタート");
+		System.out.println("TripsNewFormは：" + tripsNewForm);
+		System.out.println("ItineraryFromは：" + itineraryForm);
 		// TripsNewFormのバリデーションエラー有
 		// placeNamesが３個以上格納されていればOK
 		// arrivalTimesに値が格納されていればOK
 		if (result.hasErrors()) {
+			System.out.println("@PostMapping(\"/itinerary\") result.hasError=True スタート");
 			//出発地の出発時間をLocalDateからLocalDateTimeに変換しtripsNewFormに格納
 			LocalDateTime enteredDepartTime = LocalDateTime.of(LocalDate.of(2020, 1, 1),
 					tripsNewForm.getEnteredStartTimeValue());
 			tripsNewForm.setDepartTimes(List.of(enteredDepartTime));
 			model.addAttribute("tripsNewForm", tripsNewForm);
-
-			System.out.println("arrivalTimesErrorsのtest");
+			System.out.println("@PostMapping(\"/itinerary\") result.hasError=True エンド");
+			System.out.println("TripsNewFormは：" + tripsNewForm);
 			return "trips/new";
 		}
 
 		// confirm画面から遷移。
-		if (!itineraryForm.getTripTitle().equals("")) {
+		if (fromConfirm == true) {
+			System.out.println("@PostMapping(\"/itinerary\") !getTripTitle().equals(\"\")=True スタート");
 			//confirm画面のデータをmodelに追加
 			model.addAttribute("itineraryForm", itineraryForm);
-			//itineraryFormの初期化
+			/*itineraryFormの初期化 
+			/*tagIdは1つ以上選択必須にしてるためTagIdsがnullの時は存在しないが、万が一nullの場合
+			/*viewがエラー表示になるため初期化している。*/
 			if (itineraryForm.getTagIds() == null) {
 				itineraryForm.setTagIds(new ArrayList<>());
 			}
@@ -154,6 +201,9 @@ public class TripsController {
 			model.addAttribute("publicOptions", publicOptions);
 			List<Purpose> purposes = purposeRepository.findAllByOrderById();
 			model.addAttribute("purposes", purposes);
+
+			System.out.println("@PostMapping(\"/itinerary\") !getTripTitle().equals(\"\")=True エンド");
+			System.out.println("ItineraryFromは：" + itineraryForm);
 
 			return "trips/itinerary";
 		}
@@ -235,48 +285,20 @@ public class TripsController {
 		List<Purpose> purposes = purposeRepository.findAllByOrderById();
 		model.addAttribute("purposes", purposes);
 
+		System.out.println("@PostMapping(\"/itinerary\") エンド");
+		System.out.println("TripsNewFormは：" + tripsNewForm);
+		System.out.println("ItineraryFromは：" + itineraryForm);
+
 		return "trips/itinerary";
-	}
-
-	//旅作成画面（旅程作成画面から戻る）
-	@PostMapping("/new")
-	public String newTripGoBack(ItineraryForm itineraryForm, Model model) {
-		System.out.println("newTripに戻る");
-		//出発時間、滞在時間、場所をitineraryFormからtripsNewFormに変換
-		TripsNewForm tripsNewForm = new TripsNewForm();
-		//滞在時間、場所を変換
-		List<LocalTime> stayTimes = new ArrayList<>();
-		List<String> placeNames = new ArrayList<>();
-		int rowSequencesLength = itineraryForm.getRowSequences().size();
-		for (int i = 0; i < rowSequencesLength; i++) {
-			if (i % 2 == 0) { //偶数行(0スタート)
-				placeNames.add(itineraryForm.getDepartureNames().get(i));
-			}
-			if (i == rowSequencesLength - 1) { //最終行のみ到着地を場所に追加
-				placeNames.add(itineraryForm.getArrivalNames().get(i));
-			}
-			if (i % 2 == 1) {
-				Duration stayTimeDuration = Duration.between(itineraryForm.getStartTimes().get(i),
-						itineraryForm.getEndTimes().get(i));
-				stayTimes.add(LocalTime.ofNanoOfDay(stayTimeDuration.toNanos()));
-			}
-		}
-		tripsNewForm.setStayTimes(stayTimes);
-		tripsNewForm.setPlaceNames(placeNames);
-		tripsNewForm.setDepartTimes(itineraryForm.getStartTimes());
-		tripsNewForm.setTripTitle(itineraryForm.getTripTitle());
-		tripsNewForm.setPublicId(itineraryForm.getPublicId());
-		tripsNewForm.setTagIds(itineraryForm.getTagIds());
-		System.out.println("旅程→旅作成戻る");
-		model.addAttribute("tripsNewForm", tripsNewForm);
-
-		return "trips/new";
 	}
 
 	//旅程確認画面
 	@PostMapping("/confirm")
 	public String newItineraryConfirm(@Validated ItineraryForm itineraryForm, BindingResult result, Model model) {
+		System.out.println("@PostMapping(\"/confirm\") スタート");
+		System.out.println("ItineraryFromは：" + itineraryForm);
 		if (result.hasErrors()) {
+			System.out.println("@PostMapping(\"/confirm\") result.hasErrors=true スタート");
 			//itineraryFormを設定
 			if (itineraryForm.getTagIds() == null) {
 				itineraryForm.setTagIds(new ArrayList<>());
@@ -291,6 +313,9 @@ public class TripsController {
 			model.addAttribute("purposes", purposes);
 			//purposeIdのバリデーションエラーメッセージ
 			model.addAttribute("purposeIdsMessage", "行動のプルダウンを全て選択してください");
+
+			System.out.println("@PostMapping(\"/confirm\") result.hasErrors=true エンド");
+			System.out.println("ItineraryFromは：" + itineraryForm);
 
 			return "trips/itinerary";
 		}
@@ -328,6 +353,9 @@ public class TripsController {
 			}
 		});
 		itineraryForm.setUsedBrDescriptions(usedBrDescriptions);
+
+		System.out.println("@PostMapping(\"/confirm\") エンド");
+		System.out.println("ItineraryFromは：" + itineraryForm);
 
 		model.addAttribute("itineraryForm", itineraryForm);
 		return "trips/confirm";
