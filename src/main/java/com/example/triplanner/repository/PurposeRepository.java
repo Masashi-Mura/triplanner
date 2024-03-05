@@ -10,4 +10,6 @@ public interface PurposeRepository extends JpaRepository<Purpose, Integer> {
 	
 	List<Purpose> findAllByOrderById();
 	
+	Purpose findPurposeById(Integer id);
+	
 }

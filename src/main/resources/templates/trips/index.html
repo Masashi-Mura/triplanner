@@ -11,6 +11,7 @@
 		<div class="container mb-3">
 			<form class="gy-2 gx-3 align-items-center">
 				<div class="row justify-content-end align-items-end">
+					<h1 class="col mr-auto mb-auto">旅一覧</h1>
 					<div class="col-auto">
 						<label class="form-label" for="selectedDay">旅の日数</label>
 						<select class="form-select" id="selectedDay" name="selectedDay">
@@ -64,7 +65,7 @@
 							</th:block>
 						</ul>
 					</div>
-					<div class="col-auto">
+					<div class="col-auto pt-4">
 						<div id="searchButton" class="btn-group" role="group"
 							aria-label="Button group with nested dropdown">
 							<button type="button" class="btn btn-primary">検索</button>
@@ -82,6 +83,7 @@
 				</div>
 			</form>
 		</div>
+		<!-- 旅一覧カード -->
 		<div class="container">
 			<div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4">
 				<div class="col" th:each="trip, tripStat : ${tripsList}">
@@ -90,7 +92,7 @@
 							allowfullscreen referrerpolicy="no-referrer-when-downgrade"
 							th:src="'https://www.google.com/maps/embed/v1/directions?key=' + ${@environment.getProperty('googlemap.key')} + ${placeNamesQueries[tripStat.index]}">
 						</iframe>
-						<div class="card-body">
+						<div class="card-body scrollable">
 							<h5 class="card-title" th:text="${trip.tripTitle}"></h5>
 							<div class="card-text">
 								<div th:each="itineraryRow, itineraryStat: ${itineraries[tripStat.index]}">
@@ -105,6 +107,9 @@
 									</div>
 								</div>
 							</div>
+						</div>
+						<div class="card-footer text-end">
+							<a th:href="${'/trips/' + {trip.id}}" class="card-link" target="_blank">旅程表を開く</a>
 						</div>
 					</div>
 				</div>

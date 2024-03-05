@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<title>Triplanner</title>
+</head>
+
+<body>
+	<div class="trips-itinerary-wrapper" layout:fragment="contents">
+		<div class="container">
+			<!-- 旅のタイトル -->
+			<h1 class="text-center" th:text="${trip.tripTitle}">旅タイトル</h1>
+			<div class="row">
+				<div class="col" th:if="${itinerary != null}">
+					<table class="table table-striped" th:object="${itinerary}">
+						<thead>
+							<tr>
+								<th scope="col">日程</th>
+								<th scope="col">時刻</th>
+								<td> </td>
+								<td> </td>
+								<th scope="col">行動</th>
+								<th scope="col">内容</th>
+							</tr>
+						</thead>
+						<tbody><!-- ここから繰り返し -->
+							<th:block th:each="i : ${#numbers.sequence(0, #object.size() - 1)}">
+								<!-- 偶数行(0スタート) -->
+								<th:block th:if="${#object[i].rowSequence % 2 == 0}">
+									<tr>
+										<td th:text="${#temporals.day(#object[i].startTime)}"></td>
+										<td th:text="${#temporals.format(#object[i].startTime, 'HH:mm')}">9:10</td>
+										<td>～</td>
+										<td th:text="${#temporals.format(#object[i].endTime, 'HH:mm')}">9:45</td>
+										<td th:text="${purposes[i]}"></td>
+										<td><span
+												th:text="${#object[i].departureName} + '&nbsp;&rArr;&nbsp;' + ${#object[i].arrivalName}"></span><br>
+											<span th:utext="${#object[i].description}"></span>
+										</td>
+									</tr>
+								</th:block>
+								<!-- 奇数行(0スタート) -->
+								<th:block th:if="${#object[i].rowSequence % 2 != 0}">
+									<tr>
+										<td th:text="${#temporals.day(#object[i].startTime)}"></td>
+										<td th:text="${#temporals.format(#object[i].startTime, 'HH:mm')}">9:10</td>
+										<td>～</td>
+										<td th:text="${#temporals.format(#object[i].endTime, 'HH:mm')}">9:45</td>
+										<td th:text="${purposes[i]}"></td>
+										<td><span th:text="${#object[i].title}"></span><BR>
+											<span th:utext="${#object[i].description}"></span>
+										</td>
+									</tr>
+								</th:block>
+							</th:block>
+						</tbody><!-- ここまで繰り返し -->
+					</table>
+				</div>
+				<div class="col" th:if="${itinerary == null}">
+					<p>旅程情報が存在しません。</p>
+					<p>管理者に問い合わせてください</p>
+				</div><!-- row閉じ -->
+				<div class="row mb-4">
+					<label class="col-form-label">タグ</label>
+					<div class="col-auto">
+						<th:block th:each="tag, index : ${tags}">
+							<span th:text="${tag.name}"></span>
+							<span th:if="${!index.last}">, </span>
+						</th:block>
+					</div>
+				</div> <!-- row閉じ -->
+				<div class="row">
+					<div class="col-auto">
+						<button class="btn btn-primary" onclick="closeWindow()">閉じる</button>
+					</div>
+				</div><!-- row閉じ -->
+			</div>
+		</div>
+		<script>
+			function closeWindow() {
+				window.close();
+			}
+		</script>
+	</div>
+</body>
+
+</html>

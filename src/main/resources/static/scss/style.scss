@@ -69,29 +69,31 @@ nav.navbar {
 	}
 }
 
-.pages-index-wrapper {
-	width: 100vw;
-	height: 100vh;
-	background-image: url('/images/bg-top.jpg');
-	background-position: center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-size: cover;
-	background-color: #464646;
-
-	.container {
-		padding-top: 80px;
-
-		h1 {
-			font-size: 56px;
-			margin-bottom: 20px;
-		}
-
-		h2 {
-			margin-bottom: 60px;
-		}
-	}
-}
+//
+//.pages-index-wrapper {
+//	width: 100vw;
+//	height: 100vh;
+//	background-image: url('/images/bg-top.jpg');
+//	background-position: center;
+//	background-repeat: no-repeat;
+//	background-attachment: fixed;
+//	background-size: cover;
+//	background-color: #464646;
+//
+//	.container {
+//		padding-top: 80px;
+//
+//		h1 {
+//			font-size: 56px;
+//			margin-bottom: 20px;
+//		}
+//
+//		h2 {
+//			margin-bottom: 60px;
+//		}
+//	}
+//
+//}
 
 .users-new-wrapper {
 	width: 100vw;
@@ -115,6 +117,11 @@ nav.navbar {
 	background-color: #fafafa;
 	min-height: calc(100vh - 180px);
 	overflow: hidden;
+
+	.card-body {
+		height: 205px;
+		overflow-y: auto;
+	}
 
 	main {
 		background-color: #fff;
@@ -178,17 +185,20 @@ nav.navbar {
 				}
 			}
 		}
+
+
 	}
 }
 
 .trips-new-wrapper {
-	padding-top: 40px;
-	height: calc(100vh - 40px);
-    .container {
+	padding-top: 56px;
+	height: calc(100vh - 56px);
+
+	.container {
 		height: 100%;
 	}
 
-    .row {
+	.row {
 		height: 100%;
 	}
 
@@ -217,7 +227,7 @@ nav.navbar {
 		max-height: 100%;
 		overflow-y: auto;
 	}
-	
+
 	.display-none {
 		display: none;
 	}
@@ -225,16 +235,16 @@ nav.navbar {
 
 
 .trips-itinerary-wrapper {
-	padding-top: 40px;
+	padding-top: 56px;
 	height: 100vh;
-    .container {
+
+	.container {
 		height: 100%;
 	}
-	
+
 
 	textarea {
 		resize: both;
 		overflow: auto;
 	}
 }
-

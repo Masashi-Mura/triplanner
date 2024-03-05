@@ -52,23 +52,6 @@ nav.navbar {
     height: 40px;
     margin-right: 10px; }
 
-.pages-index-wrapper {
-  width: 100vw;
-  height: 100vh;
-  background-image: url("/images/bg-top.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  background-color: #464646; }
-  .pages-index-wrapper .container {
-    padding-top: 80px; }
-    .pages-index-wrapper .container h1 {
-      font-size: 56px;
-      margin-bottom: 20px; }
-    .pages-index-wrapper .container h2 {
-      margin-bottom: 60px; }
-
 .users-new-wrapper {
   width: 100vw;
   height: 100vh;
@@ -86,6 +69,9 @@ nav.navbar {
   background-color: #fafafa;
   min-height: calc(100vh - 180px);
   overflow: hidden; }
+  .trips-index-wrapper .card-body {
+    height: 205px;
+    overflow-y: auto; }
   .trips-index-wrapper main {
     background-color: #fff;
     padding: 20px 0;
@@ -128,8 +114,8 @@ nav.navbar {
       list-style: none; }
 
 .trips-new-wrapper {
-  padding-top: 40px;
-  height: calc(100vh - 40px); }
+  padding-top: 56px;
+  height: calc(100vh - 56px); }
   .trips-new-wrapper .container {
     height: 100%; }
   .trips-new-wrapper .row {
@@ -154,7 +140,7 @@ nav.navbar {
     display: none; }
 
 .trips-itinerary-wrapper {
-  padding-top: 40px;
+  padding-top: 56px;
   height: 100vh; }
   .trips-itinerary-wrapper .container {
     height: 100%; }

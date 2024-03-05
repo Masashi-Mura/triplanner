@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,7 +74,7 @@ public class TripsController {
 	public String index(Model model) {
 
 		//表示するtrip一覧を取得
-		List<Trips> tripsList = tripsRepository.findAllByOrderById();
+		List<Trips> tripsList = tripsRepository.findAllByOrderByUpdatedAtDesc();
 		model.addAttribute("tripsList", tripsList);
 
 		//取得したtrip一覧のidに紐づく旅程を取得
@@ -109,6 +111,42 @@ public class TripsController {
 		model.addAttribute("prefectures", prefectures);
 
 		return "trips/index";
+	}
+	
+	//旅程表示画面
+	@GetMapping("/{tripId}")
+	public String viewItinerary(@PathVariable("tripId") Integer tripId, Model model) {
+		//旅情報を取得
+		Optional<Trips> trip = tripsRepository.findById(tripId);
+		model.addAttribute("trip", trip.orElse(null));
+		
+		//旅程情報を取得
+		List<Itinerary> itinerary = itinerariesRepository.findByTripIdOrderById(tripId);
+		List<String> purposes = new ArrayList<>();
+		itinerary.forEach(row -> {
+			//旅程情報のdescriptionフィールドの改行を<br>に変換
+			String description = row.getDescription();
+			if (description != null && !description.isEmpty()) {
+				row.setDescription(description.replaceAll("\r\n", "<br>"));
+			} else {
+				row.setDescription("");
+			}
+			//旅程情報の目的をidから文字に変換
+			Purpose purpose = purposeRepository.findPurposeById(row.getPurposeId());
+			purposes.add(purpose.getPurpose());
+		});
+		model.addAttribute("itinerary", itinerary);
+		model.addAttribute("purposes", purposes);
+		
+		//タグ情報を取得
+		List<TagLists> tagLists = tagListsRepository.findByTripIdOrderById(tripId);
+		List<Tag> tags = new ArrayList<>();
+		tagLists.forEach(tag -> {
+			tags.add(tag.getTag());
+		});
+		model.addAttribute("tags", tags);
+		
+		return "trips/view";
 	}
 
 	//旅作成画面
