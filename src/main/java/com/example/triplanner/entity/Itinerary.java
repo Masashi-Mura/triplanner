@@ -59,7 +59,7 @@ public class Itinerary extends AbstractEntity{
 	private String title;
 	
 	/** 内容 */
-	@Column(name = "description", length = 255)
+	@Column(name = "description", length = 1000)
 	private String description;
 	
 }

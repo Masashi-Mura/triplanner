@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -27,4 +29,8 @@ public class TagLists extends AbstractEntity{
 	/** tag_master_id */
 	@Column(name = "tag_id")
 	private Integer tagId;
+	
+	@OneToOne
+	@JoinColumn(name = "tag_Id", insertable = false, updatable = false)
+	private Tag tag;
 }

@@ -8,6 +8,6 @@ import com.example.triplanner.entity.Itinerary;
 
 public interface ItinerariesRepository extends JpaRepository<Itinerary, Integer> {
 
-	List<Itinerary> findByTripIdOrderById(int tripId);
+	List<Itinerary> findByTripIdOrderById(Integer tripId);
 
 }
