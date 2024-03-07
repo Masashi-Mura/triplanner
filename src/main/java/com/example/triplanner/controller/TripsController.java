@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -71,12 +73,20 @@ public class TripsController {
 
 	//旅一覧画面
 	@GetMapping("/index")
-	public String index(Model model) {
-
+	public String index(Model model,
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(name = "size", required = false, defaultValue = "3") Integer size) {
+		//ページ設定
+		Pageable pageable = Pageable.ofSize(size).withPage(page);
+		
 		//表示するtrip一覧を取得
-		List<Trips> tripsList = tripsRepository.findAllByOrderByUpdatedAtDesc();
+//		List<Trips> tripsList = tripsRepository.findAllByOrderByUpdatedAtDesc();
+//		model.addAttribute("tripsList", tripsList);
+		Page<Trips> tripsPage = tripsRepository.findAllByOrderByUpdatedAtDesc(pageable);
+		List<Trips> tripsList = tripsPage.getContent();
+		model.addAttribute("page", tripsPage);
 		model.addAttribute("tripsList", tripsList);
-
+		
 		//取得したtrip一覧のidに紐づく旅程を取得
 		List<List<Itinerary>> itineraries = new ArrayList<>();
 		tripsList.forEach(trip -> {
