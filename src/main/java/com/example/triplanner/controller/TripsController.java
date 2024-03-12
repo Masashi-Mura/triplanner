@@ -31,6 +31,7 @@ import com.example.triplanner.entity.TagLists;
 import com.example.triplanner.entity.Trips;
 import com.example.triplanner.form.ItineraryForm;
 import com.example.triplanner.form.TripsNewForm;
+import com.example.triplanner.form.TripsSearchForm;
 import com.example.triplanner.repository.ItinerariesRepository;
 import com.example.triplanner.repository.PrefectureRepository;
 import com.example.triplanner.repository.PublicOptionRepository;
@@ -73,63 +74,145 @@ public class TripsController {
 
 	//旅一覧画面
 	@GetMapping("/index")
-	public String index(Model model,
+	public String index(Model model, TripsSearchForm filter,
 			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(name = "size", required = false, defaultValue = "3") Integer size) {
-		//ページ設定
+		//ページネーション設定
 		Pageable pageable = Pageable.ofSize(size).withPage(page);
-		
-		//表示するtrip一覧を取得
-//		List<Trips> tripsList = tripsRepository.findAllByOrderByUpdatedAtDesc();
-//		model.addAttribute("tripsList", tripsList);
-		Page<Trips> tripsPage = tripsRepository.findAllByOrderByUpdatedAtDesc(pageable);
-		List<Trips> tripsList = tripsPage.getContent();
-		model.addAttribute("page", tripsPage);
-		model.addAttribute("tripsList", tripsList);
-		
-		//取得したtrip一覧のidに紐づく旅程を取得
-		List<List<Itinerary>> itineraries = new ArrayList<>();
-		tripsList.forEach(trip -> {
-			List<Itinerary> oneTripItinerary = itinerariesRepository.findByTripIdOrderById(trip.getId());
-			itineraries.add(oneTripItinerary);
-		});
-		model.addAttribute("itineraries", itineraries);
+		StringBuilder searchedQuery = new StringBuilder("/trips/index?");
 
-		//取得した旅程の場所名一覧を取得（indexのgoogleMapで経路指定に使用する形に変換)
-		//(使用する形の例：&origin=東京駅&destination=大阪駅&waypoints=神奈川駅|名古屋駅)
-		List<String> placeNamesQueries = new ArrayList<>();
-		itineraries.forEach(itinerary -> {
-			StringBuilder placeNamesQuery = new StringBuilder("&origin");
-			placeNamesQuery.append("=" + itinerary.getFirst().getDepartureName());
-			placeNamesQuery.append("&destination=" + itinerary.getLast().getArrivalName());
-			placeNamesQuery.append("&waypoints=");
-			//経由地（出発地と最終目的地を除いた場所）を連結
-			placeNamesQuery.append(itinerary.get(2).getDepartureName());
-			for (int i = 4; i < itinerary.size(); i++) {
-				if (i % 2 == 0) {
-					placeNamesQuery.append("|" + itinerary.get(i).getDepartureName());
-				}
+		//日数に該当するtripIdを取得（該当が無ければnull）。指定なしは0を格納
+		List<Integer> tripIdFilteredDays = new ArrayList<>();
+		if (filter.getDays() == null || filter.getDays() == 0) {
+			tripIdFilteredDays.add(0);
+			//クエリパラメータ作成 パラメータ最初は&不要なため指定なしでも作成
+			searchedQuery.append("days=0");
+		} else {
+			tripIdFilteredDays = tripsRepository.findTripIdWithDays(filter.getDays());
+			//クエリパラメータ作成
+			searchedQuery.append("days=" + filter.getDays());
+		}
+
+		//出発エリアに該当するtripIdを取得（該当が無ければnull）。指定なしは0を格納
+		List<Integer> tripIdFilteredSpoint = new ArrayList<>();
+		if (filter.getSpoint() == null || filter.getSpoint() == 0) {
+			tripIdFilteredSpoint.add(0);
+		} else {
+			tripIdFilteredSpoint = itinerariesRepository.findTripIdWithStartPoint(filter.getSpoint());
+			//クエリパラメータ作成
+			searchedQuery.append("&spoint=" + filter.getSpoint());
+		}
+
+		//経由地に該当するtripIdを取得（該当が無ければnull）。指定なしは0を格納
+		List<Integer> tripIdFilteredWaypoints = new ArrayList<>();
+		if (filter.getWaypoints() != null) {
+			tripIdFilteredWaypoints = itinerariesRepository.findTripIdWithAllWaypoints(filter.getWaypoints(),
+					filter.getWaypoints().size());
+			//クエリパラメータ作成
+			filter.getWaypoints().forEach(wp -> searchedQuery.append("&waypoints=" + wp));
+		} else {
+			tripIdFilteredWaypoints.add(0);
+		}
+
+		//タグに該当するtripIdを取得（該当が無ければnull）。指定なしは0を格納
+		List<Integer> tripIdFilteredTag = new ArrayList<>();
+		if (filter.getTags() != null) {
+			tripIdFilteredTag = tagListsRepository.findTripIdWithAllTags(filter.getTags(),
+					filter.getTags().size());
+			//クエリパラメータ作成
+			filter.getTags().forEach(tg -> searchedQuery.append("&tags=" + tg));
+		} else {
+			tripIdFilteredTag.add(0);
+		}
+		model.addAttribute("queryParam", searchedQuery.toString());
+		System.out.println(searchedQuery.toString());
+
+		//フィルタ後のデータを抽出
+		List<Integer> filteredTripIds = tripsRepository.findTripIdAll();
+		if (tripIdFilteredTag == null || tripIdFilteredWaypoints == null || tripIdFilteredSpoint == null
+				|| tripIdFilteredDays == null) {
+			//検索結果が出なかったときの処理を書く
+			filteredTripIds = null;
+		} else if (tripIdFilteredTag.size() == 0 || tripIdFilteredWaypoints.size() == 0
+				|| tripIdFilteredSpoint.size() == 0
+				|| tripIdFilteredDays.size() == 0) {
+			//検索結果が出なかったときの処理を書く
+			filteredTripIds = null;
+		} else if (tripIdFilteredTag.get(0) + tripIdFilteredWaypoints.get(0) + tripIdFilteredSpoint
+				.get(0) + tripIdFilteredDays.get(0) == 0) {
+			//フィルタの指定なしの時は何もしない
+		} else {
+			//filteredTripIdsに対して全てのフィルタを順に適用する
+			if (tripIdFilteredDays.get(0) != 0) {
+				filteredTripIds.retainAll(tripIdFilteredDays);
 			}
-			placeNamesQueries.add(placeNamesQuery.toString());
-		});
-		model.addAttribute("placeNamesQueries", placeNamesQueries);
+			if (tripIdFilteredSpoint.get(0) != 0) {
+				filteredTripIds.retainAll(tripIdFilteredSpoint);
+			}
+			if (tripIdFilteredWaypoints.get(0) != 0) {
+				filteredTripIds.retainAll(tripIdFilteredWaypoints);
+			}
+			if (tripIdFilteredTag.get(0) != 0) {
+				filteredTripIds.retainAll(tripIdFilteredTag);
+			}
+		}
+
+		//１ページに表示するtrip一覧を取得
+		if (filteredTripIds == null || filteredTripIds.size() == 0) {
+			model.addAttribute("searchResult", "条件に一致する旅程が見つかりません。条件を変更してください。");
+		} else {
+			Page<Trips> tripsPage = tripsRepository.findByIdInOrderByUpdatedAtDesc(filteredTripIds, pageable);
+			List<Trips> tripsList = tripsPage
+					.getContent();
+			model.addAttribute("page", tripsPage);
+			model.addAttribute("tripsList", tripsList);
+
+			//取得したtrip一覧のidに紐づく旅程を取得
+			List<List<Itinerary>> itineraries = new ArrayList<>();
+			tripsList.forEach(trip -> {
+				List<Itinerary> oneTripItinerary = itinerariesRepository.findByTripIdOrderById(trip.getId());
+				itineraries.add(oneTripItinerary);
+			});
+			model.addAttribute("itineraries", itineraries);
+
+			//取得した旅程の場所名一覧を取得（indexのgoogleMapで経路指定に使用する形に変換)
+			//(使用する形の例：&origin=東京駅&destination=大阪駅&waypoints=神奈川駅|名古屋駅)
+			List<String> placeNamesQueries = new ArrayList<>();
+			itineraries.forEach(itinerary -> {
+				StringBuilder placeNamesQuery = new StringBuilder("&origin");
+				placeNamesQuery.append("=" + itinerary.getFirst().getDepartureName());
+				placeNamesQuery.append("&destination=" + itinerary.getLast().getArrivalName());
+				placeNamesQuery.append("&waypoints=");
+				//経由地（出発地と最終目的地を除いた場所）を連結
+				placeNamesQuery.append(itinerary.get(2).getDepartureName());
+				for (int i = 4; i < itinerary.size(); i++) {
+					if (i % 2 == 0) {
+						placeNamesQuery.append("|" + itinerary.get(i).getDepartureName());
+					}
+				}
+				placeNamesQueries.add(placeNamesQuery.toString());
+			});
+			model.addAttribute("placeNamesQueries", placeNamesQueries);
+		}
 
 		List<Tag> tags = tagRepository.findAllByOrderById();
 		model.addAttribute("tags", tags);
 
-		List<Prefecture> prefectures = prefectureRepository.findAllByOrderById();
+		List<Prefecture> prefectures = prefectureRepository
+				.findAllByOrderById();
 		model.addAttribute("prefectures", prefectures);
-
+		
+		model.addAttribute("filter", filter);
 		return "trips/index";
 	}
-	
+
 	//旅程表示画面
 	@GetMapping("/{tripId}")
 	public String viewItinerary(@PathVariable("tripId") Integer tripId, Model model) {
 		//旅情報を取得
 		Optional<Trips> trip = tripsRepository.findById(tripId);
 		model.addAttribute("trip", trip.orElse(null));
-		
+
 		//旅程情報を取得
 		List<Itinerary> itinerary = itinerariesRepository.findByTripIdOrderById(tripId);
 		List<String> purposes = new ArrayList<>();
@@ -147,7 +230,7 @@ public class TripsController {
 		});
 		model.addAttribute("itinerary", itinerary);
 		model.addAttribute("purposes", purposes);
-		
+
 		//タグ情報を取得
 		List<TagLists> tagLists = tagListsRepository.findByTripIdOrderById(tripId);
 		List<Tag> tags = new ArrayList<>();
@@ -155,7 +238,7 @@ public class TripsController {
 			tags.add(tag.getTag());
 		});
 		model.addAttribute("tags", tags);
-		
+
 		return "trips/view";
 	}
 
