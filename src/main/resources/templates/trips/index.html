@@ -12,129 +12,149 @@
 			<form class="gy-2 gx-3 align-items-center">
 				<div class="row justify-content-end align-items-end">
 					<h1 class="col mr-auto mb-auto">旅一覧</h1>
-					<div class="col-auto">
-						<label class="form-label" for="selectedDay">旅の日数</label>
-						<select class="form-select" id="selectedDay" name="selectedDay">
-							<option selected>日数指定なし</option>
-							<option value="1">1日</option>
-							<option value="2">2日</option>
-							<option value="3">3日</option>
-							<option value="4">4日</option>
-							<option value="5">5日以上</option>
-						</select>
-					</div>
-					<!-- 出発エリア選択 -->
-					<div class="col-auto">
-						<label class="form-label" for="departurePrefecture">出発エリア</label>
-						<select class="form-select" id="departurePrefecture" name="departurePrefecture">
-							<option selected>全エリア</option>
-							<th:block th:each="prefecture : ${prefectures}">
-								<option name="departurePrefecture" th:value="${prefecture.id}"
-									th:text="${prefecture.name}" />
-							</th:block>
-						</select>
-					</div>
-					<!-- 経由エリア選択 -->
-					<div class="col-auto">
-						<label for="waypointsPrefecture" class="form-label">経由エリア</label>
-						<button id="waypointsPrefecture" class="form-select" type="button" data-bs-toggle="dropdown"
-							data-bs-auto-close="outside" aria-expanded="false">
-							経由エリアを選択
-						</button>
-						<ul class="dropdown-menu overflow-auto" style="height: 200px">
-							<th:block th:each="prefecture : ${prefectures}">
-								<label class="dropdown-item">
-									<input class="form-check-input" type="checkbox" name="waypoints"
-										th:value="${prefecture.id}" th:text="${prefecture.name}" />
-								</label>
-							</th:block>
-						</ul>
-					</div>
-					<div class="col-auto">
-						<label for="tags" class="form-label">タグ</label>
-						<button id="tags" class="form-select" type="button" data-bs-toggle="dropdown"
-							data-bs-auto-close="outside" aria-expanded="false">
-							タグ選択
-						</button>
-						<ul class="dropdown-menu overflow-auto" style="height: 200px">
-							<th:block th:each="tag : ${tags}">
-								<label class="dropdown-item">
-									<input class="form-check-input" type="checkbox" name="tags" th:value="${tag.id}"
-										th:text="${tag.name}" />
-								</label>
-							</th:block>
-						</ul>
-					</div>
-					<div class="col-auto pt-4">
-						<div id="searchButton" class="btn-group" role="group"
-							aria-label="Button group with nested dropdown">
-							<button type="button" class="btn btn-primary">検索</button>
-							<div class="btn-group" role="group">
-								<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-									aria-expanded="false">
-								</button>
-								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href="#">自分の投稿のみ表示</a></li>
-									<li><a class="dropdown-item" href="#">自分の削除した投稿のみ表示</a></li>
-								</ul>
-							</div>
+					<form method="GET" th:action="@{/trips/index}">
+						<!-- 旅の日数選択 -->
+						<div class="col-auto">
+							<label class="form-label" for="selectedDay">旅の日数</label>
+							<select class="form-select" id="selectedDay" name="days">
+								<option selected value="0">日数指定なし</option>
+								<option value="1" th:selected="${filter.days == 1}">1日</option>
+								<option value="2" th:selected="${filter.days == 2}">2日</option>
+								<option value="3" th:selected="${filter.days == 3}">3日</option>
+								<option value="4" th:selected="${filter.days == 4}">4日</option>
+								<option value="5" th:selected="${filter.days == 5}">5日以上</option>
+							</select>
 						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-		<!-- 旅一覧カード -->
-		<div class="container">
-			<div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4">
-				<div class="col" th:each="trip, tripStat : ${tripsList}">
-					<div class="card h-100">
-						<iframe class="card-img-top" width="600" height="400" style="border:0" loading="lazy"
-							allowfullscreen referrerpolicy="no-referrer-when-downgrade"
-							th:src="'https://www.google.com/maps/embed/v1/directions?key=' + ${@environment.getProperty('googlemap.key')} + ${placeNamesQueries[tripStat.index]}">
-						</iframe>
-						<div class="card-body scrollable">
-							<h5 class="card-title" th:text="${trip.tripTitle}"></h5>
-							<div class="card-text">
-								<div th:each="itineraryRow, itineraryStat: ${itineraries[tripStat.index]}">
-									<div th:if="${itineraryStat.first}">
-										<div th:text="${'・' + itineraryRow.departureName}"><br></div>
-									</div>
-									<div th:if="${itineraryStat.odd}">
-										<div th:text="${'・' + itineraryRow.arrivalName}"><br></div>
-									</div>
-									<div th:if="${itineraryStat.even}">
-										<div th:text="${'&emsp;&nbsp;' + itineraryRow.title}"><br></div>
-									</div>
+						<!-- 出発エリア選択 -->
+						<div class="col-auto">
+							<label class="form-label" for="departurePrefecture">出発エリア</label>
+							<select class="form-select" id="departurePrefecture" name="spoint">
+								<option selected value="0">全エリア</option>
+								<th:block th:each="prefecture : ${prefectures}">
+									<option name="spoint" th:value="${prefecture.id}" th:text="${prefecture.name}"
+										th:selected="${filter.spoint == prefecture.id}" />
+								</th:block>
+							</select>
+						</div>
+						<!-- 経由エリア選択 -->
+						<div class="col-auto">
+							<label for="waypointsPrefecture" class="form-label">経由エリア</label>
+							<button id="waypointsPrefecture" class="form-select" type="button"
+								data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" disabled>
+								経由エリアを選択
+							</button>
+							<ul class="dropdown-menu overflow-auto" style="height: 200px">
+								<th:block th:each="prefecture : ${prefectures}">
+									<label class="dropdown-item">
+										<input class="form-check-input disabled" type="checkbox" name="waypoints"
+											th:value="${prefecture.id}" th:text="${prefecture.name}" />
+									</label>
+								</th:block>
+							</ul>
+						</div>
+						<!-- タグ選択 -->
+						<div class="col-auto">
+							<label for="tags" class="form-label">タグ</label>
+							<button id="tags" class="form-select" type="button" data-bs-toggle="dropdown"
+								data-bs-auto-close="outside" aria-expanded="false">
+								タグ選択
+							</button>
+							<ul class="dropdown-menu overflow-auto" style="height: 200px">
+								<div th:if="${filter.tags == null}">
+									<th:block th:each="tag : ${tags}">
+										<label class="dropdown-item">
+											<input class="form-check-input" type="checkbox" name="tags"
+												th:value="${tag.id}" th:text="${tag.name}" />
+										</label>
+									</th:block>
+								</div>
+								<div th:if="${filter.tags != null}">
+									<th:block th:each="tag : ${tags}">
+										<label class="dropdown-item">
+											<input class="form-check-input" type="checkbox" name="tags"
+												th:value="${tag.id}" th:text="${tag.name}"
+												th:checked="${#lists.contains(filter.tags, tag.id)}" />
+										</label>
+									</th:block>
+								</div>
+							</ul>
+						</div>
+						<div class="col-auto pt-4">
+							<div id="searchButton" class="btn-group" role="group"
+								aria-label="Button group with nested dropdown">
+								<button type="submit" class="btn btn-primary">検索</button>
+								<div class="btn-group" role="group">
+									<button type="button" class="btn btn-primary dropdown-toggle"
+										data-bs-toggle="dropdown" aria-expanded="false">
+									</button>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item disabled" href="#">自分の投稿のみ表示</a></li>
+										<li><a class="dropdown-item disabled" href="#">自分の削除した投稿のみ表示</a></li>
+									</ul>
 								</div>
 							</div>
 						</div>
-						<div class="card-footer text-end">
-							<a th:href="${'/trips/' + {trip.id}}" class="card-link" target="_blank">旅程表を開く</a>
+					</form>
+				</div>
+			</form>
+		</div>
+		<div th:if="${searchResult != null}">
+			<p class="text-center" th:text="${searchResult}"></p>
+		</div>
+		<div th:if="${searchResult == null}">
+			<!-- 旅一覧カード -->
+			<div class="container">
+				<div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4">
+					<div class="col" th:each="trip, tripStat : ${tripsList}">
+						<div class="card h-100">
+							<iframe class="card-img-top" width="600" height="400" style="border:0" loading="lazy"
+								allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+								th:src="'https://www.google.com/maps/embed/v1/directions?key=' + ${@environment.getProperty('googlemap.key')} + ${placeNamesQueries[tripStat.index]}">
+							</iframe>
+							<div class="card-body scrollable">
+								<h5 class="card-title" th:text="${trip.tripTitle}"></h5>
+								<div class="card-text">
+									<div th:each="itineraryRow, itineraryStat: ${itineraries[tripStat.index]}">
+										<div th:if="${itineraryStat.first}">
+											<div th:text="${'・' + itineraryRow.departureName}"><br></div>
+										</div>
+										<div th:if="${itineraryStat.odd}">
+											<div th:text="${'・' + itineraryRow.arrivalName}"><br></div>
+										</div>
+										<div th:if="${itineraryStat.even}">
+											<div th:text="${'&emsp;&nbsp;' + itineraryRow.title}"><br></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-footer text-end">
+								<a th:href="${'/trips/' + {trip.id}}" class="card-link" target="_blank">旅程表を開く</a>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<!-- ページネーション -->
+			<nav class="mt-3">
+				<ul class="pagination justify-content-center">
+					<li th:if="${page.first}" class="page-item disabled"><a class="page-link">前へ</a></li>
+					<li th:if="${!page.first}" class="page-item"><a class="page-link"
+							th:href="@{${queryParam}(page = ${page.number - 1})}">前へ</a></li>
+					<th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+						<div th:if="${i} == ${page.number}">
+							<li class="page-item disabled"><a class="page-link" th:text="${i + 1}">表示中のページ</a></li>
+						</div>
+						<div th:if="${i} != ${page.number}">
+							<li class="page-item"><a class="page-link" th:href="@{${queryParam}(page = ${i})}"
+									th:text="${i + 1}">2</a></li>
+						</div>
+					</th:block>
+					<li th:if="${page.last}" class="page-item disabled"><a class="page-link">次へ</a></li>
+					<li th:if="${!page.last}" class="page-item"><a class="page-link"
+							th:href="@{${queryParam}(page = ${page.number + 1})}">次へ</a></li>
+				</ul>
+			</nav>
 		</div>
-		<!-- ページネーション -->
-		<nav class="mt-3">
-			<ul class="pagination justify-content-center">
-				<li th:if="${page.first}" class="page-item disabled"><a class="page-link">前へ</a></li>
-				<li th:if="${!page.first}" class="page-item"><a class="page-link"
-						th:href="@{/trips/index(page = ${page.number - 1})}">前へ</a></li>
-				<th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
-					<div th:if="${i} == ${page.number}">
-						<li class="page-item disabled"><a class="page-link" th:text="${i + 1}">表示中のページ</a></li>
-					</div>
-					<div th:if="${i} != ${page.number}">
-						<li class="page-item"><a class="page-link" th:href="@{/trips/index(page = ${i})}"
-								th:text="${i + 1}">2</a></li>
-					</div>
-				</th:block>
-				<li th:if="${page.last}" class="page-item disabled"><a class="page-link">次へ</a></li>
-				<li th:if="${!page.last}" class="page-item"><a class="page-link"
-						th:href="@{/trips/index(page = ${page.number + 1})}">次へ</a></li>
-			</ul>
-		</nav>
 	</div>
 </body>
 
