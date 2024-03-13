@@ -14,7 +14,7 @@ public interface ItinerariesRepository extends JpaRepository<Itinerary, Integer>
 
 	//経由地でフィルタ
 	@Query("SELECT i.tripId FROM Itinerary i WHERE i.departurePrefectureId IN :wIds AND i.rowSequence >= 2 "
-			+ "GROUP BY i.tripId HAVING COUNT(i.tripId) = :wLength")
+			+ "GROUP BY i.tripId HAVING COUNT(DISTINCT i.departurePrefectureId) = :wLength")
 	List<Integer> findTripIdWithAllWaypoints(@Param("wIds") List<Integer> waypointIds, @Param("wLength") Integer waypointLength);
 	
 	//出発地でフィルタ
