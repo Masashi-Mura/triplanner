@@ -39,15 +39,22 @@
 						<!-- 経由エリア選択 -->
 						<div class="col-auto">
 							<label for="waypointsPrefecture" class="form-label">経由エリア</label>
-							<button id="waypointsPrefecture" class="form-select" type="button"
-								data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" disabled>
+							<button id="waypointsPrefecture" class="form-select" type="button" data-bs-toggle="dropdown"
+								data-bs-auto-close="outside" aria-expanded="false">
 								経由エリアを選択
 							</button>
 							<ul class="dropdown-menu overflow-auto" style="height: 200px">
 								<th:block th:each="prefecture : ${prefectures}">
 									<label class="dropdown-item">
-										<input class="form-check-input disabled" type="checkbox" name="waypoints"
-											th:value="${prefecture.id}" th:text="${prefecture.name}" />
+										<div th:if="${filter.spoint == null}">
+											<input class="form-check-input" type="checkbox" name="waypoints"
+												th:value="${prefecture.id}" th:text="${prefecture.name}" />
+										</div>
+										<div th:if="${filter.spoint != null}">
+											<input class="form-check-input" type="checkbox" name="waypoints"
+												th:value="${prefecture.id}" th:text="${prefecture.name}"
+												th:checked="${#lists.contains(filter.spoint, prefecture.id)}" />
+										</div>
 									</label>
 								</th:block>
 							</ul>
@@ -60,23 +67,19 @@
 								タグ選択
 							</button>
 							<ul class="dropdown-menu overflow-auto" style="height: 200px">
-								<div th:if="${filter.tags == null}">
-									<th:block th:each="tag : ${tags}">
-										<label class="dropdown-item">
+								<th:block th:each="tag : ${tags}">
+									<label class="dropdown-item">
+										<div th:if="${filter.tags == null}">
 											<input class="form-check-input" type="checkbox" name="tags"
 												th:value="${tag.id}" th:text="${tag.name}" />
-										</label>
-									</th:block>
-								</div>
-								<div th:if="${filter.tags != null}">
-									<th:block th:each="tag : ${tags}">
-										<label class="dropdown-item">
+										</div>
+										<div th:if="${filter.tags != null}">
 											<input class="form-check-input" type="checkbox" name="tags"
 												th:value="${tag.id}" th:text="${tag.name}"
 												th:checked="${#lists.contains(filter.tags, tag.id)}" />
-										</label>
-									</th:block>
-								</div>
+										</div>
+									</label>
+								</th:block>
 							</ul>
 						</div>
 						<div class="col-auto pt-4">
